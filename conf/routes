@@ -35,3 +35,11 @@ GET           /invoices/details/:id               controllers.InvoiceController.
 GET           /invoices/update/:id                controllers.InvoiceController.update(id: Int)
 PUT           /invoices/update                    controllers.InvoiceController.updateHandle
 DELETE        /invoices/delete/:id                controllers.InvoiceController.delete(id: Int)
+
+GET           /orders/new                         controllers.OrderController.create
+POST          /orders/new/:id                     controllers.OrderController.createHandle(id: Int)
+GET           /orders/all                         controllers.OrderController.list
+GET           /orders/details/:id                 controllers.OrderController.details(id: Int)
+GET           /orders/update/:id                  controllers.OrderController.update(id: Int)
+PUT           /orders/update                      controllers.OrderController.updateHandle
+DELETE        /orders/delete/:id                  controllers.OrderController.delete(id: Int)
