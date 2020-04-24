@@ -11,3 +11,11 @@ GET           /assets/*file                       controllers.Assets.versioned(p
 GET           /cart                               controllers.CartController.show
 PUT           /cart/add-product/:id               controllers.CartController.addProduct(id: Int)
 DELETE        /cart/remove-product/:id            controllers.CartController.removeProduct(id: Int)
+
+GET           /categories/new                     controllers.CategoryController.create
+POST          /categories/new/:id                 controllers.CategoryController.createHandle(id: Int)
+GET           /categories/all                     controllers.CategoryController.list
+GET           /categories/details/:id             controllers.CategoryController.details(id: Int)
+GET           /categories/update/:id              controllers.CategoryController.update(id: Int)
+PUT           /categories/update                  controllers.CategoryController.updateHandle
+DELETE        /categories/delete/:id              controllers.CategoryController.delete(id: Int)
