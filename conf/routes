@@ -71,3 +71,7 @@ GET           /stock/all                          controllers.ReviewsController.
 GET           /stock/details/:id                  controllers.ReviewsController.details(id: Int)
 GET           /stock/update/:id                   controllers.ReviewsController.update(id: Int)
 PUT           /stock/update                       controllers.ReviewsController.updateHandle
+
+GET           /wishlist                           controllers.WishlistController.show
+PUT           /wishlist/add-product/:id           controllers.WishlistController.addProduct(id: Int)
+DELETE        /wishlist/remove-product/:id        controllers.WishlistController.removeProduct(id: Int)
