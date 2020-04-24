@@ -59,3 +59,10 @@ GET           /promotions/details/:id             controllers.PromotionsControll
 GET           /promotions/update/:id              controllers.PromotionsController.update(id: Int)
 PUT           /promotions/update                  controllers.PromotionsController.updateHandle
 
+GET           /reviews/new                        controllers.ReviewsController.create
+POST          /reviews/new/:id                    controllers.ReviewsController.createHandle(id: Int)
+GET           /reviews/all                        controllers.ReviewsController.list
+GET           /reviews/details/:id                controllers.ReviewsController.details(id: Int)
+GET           /reviews/update/:id                 controllers.ReviewsController.update(id: Int)
+PUT           /reviews/update                     controllers.ReviewsController.updateHandle
+DELETE        /reviews/delete/:id                 controllers.ReviewsController.delete(id: Int)
