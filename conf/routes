@@ -66,3 +66,8 @@ GET           /reviews/details/:id                controllers.ReviewsController.
 GET           /reviews/update/:id                 controllers.ReviewsController.update(id: Int)
 PUT           /reviews/update                     controllers.ReviewsController.updateHandle
 DELETE        /reviews/delete/:id                 controllers.ReviewsController.delete(id: Int)
+
+GET           /stock/all                          controllers.ReviewsController.list
+GET           /stock/details/:id                  controllers.ReviewsController.details(id: Int)
+GET           /stock/update/:id                   controllers.ReviewsController.update(id: Int)
+PUT           /stock/update                       controllers.ReviewsController.updateHandle
