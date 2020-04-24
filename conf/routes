@@ -43,3 +43,11 @@ GET           /orders/details/:id                 controllers.OrderController.de
 GET           /orders/update/:id                  controllers.OrderController.update(id: Int)
 PUT           /orders/update                      controllers.OrderController.updateHandle
 DELETE        /orders/delete/:id                  controllers.OrderController.delete(id: Int)
+
+GET           /products/new                       controllers.ProductsController.create
+POST          /products/new/:id                   controllers.ProductsController.createHandle(id: Int)
+GET           /products/all                       controllers.ProductsController.list
+GET           /products/details/:id               controllers.ProductsController.details(id: Int)
+GET           /products/update/:id                controllers.ProductsController.update(id: Int)
+PUT           /products/update                    controllers.ProductsController.updateHandle
+DELETE        /products/delete/:id                controllers.ProductsController.delete(id: Int)
