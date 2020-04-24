@@ -12,8 +12,8 @@ scalaVersion := "2.12.2"
 
 libraryDependencies ++= Seq( ehcache , ws , specs2 % Test , guice )
 libraryDependencies ++= Seq(
-  "com.typesafe.play" %% "play-slick" % "5.0.0",
-  "com.typesafe.play" %% "play-slick-evolutions" % "5.0.0"
+  "com.typesafe.play" %% "play-slick" % "4.0.0",
+  "com.typesafe.play" %% "play-slick-evolutions" % "4.0.0"
 )
 
 unmanagedResourceDirectories in Test += (baseDirectory.value / "target/web/public/test")
