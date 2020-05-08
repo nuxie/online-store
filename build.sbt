@@ -14,7 +14,7 @@ libraryDependencies ++= Seq( ehcache , ws , specs2 % Test , guice )
 libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-slick" % "4.0.0",
   "com.typesafe.play" %% "play-slick-evolutions" % "4.0.0",
-  "mysql" % "mysql-connector-java" % "6.0.6"
+  "org.xerial" % "sqlite-jdbc" % "3.30.1"
 )
 
 unmanagedResourceDirectories in Test += (baseDirectory.value / "target/web/public/test")
