@@ -50,7 +50,9 @@ CREATE TABLE "products"
     "id"          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name"        VARCHAR NOT NULL,
     "description" VARCHAR NOT NULL,
-    "price"       REAL    NOT NULL
+    "category_id"    INT     NOT NULL,
+    "price"       REAL    NOT NULL,
+    FOREIGN KEY ("category_id") references "categories" (id)
 );
 
 CREATE TABLE "promotions"
