@@ -8,7 +8,7 @@ GET           /                                   controllers.HomeController.ind
 # Map static resources from the /public folder to the /assets URL path
 GET           /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
 
-GET           /cart                               controllers.CartController.show
+GET           /cart/:id                           controllers.CartController.show(id: Int)
 PUT           /cart/add-product/:id               controllers.CartController.addProduct(id: Int)
 DELETE        /cart/remove-product/:id            controllers.CartController.removeProduct(id: Int)
 

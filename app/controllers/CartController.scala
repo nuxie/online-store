@@ -6,14 +6,11 @@ import play.api.mvc._
 @Singleton
 class CartController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
 
-  // I don't think forms are necessary here?
-  // I will update in the future if the logic changes
-
-  def show = Action {
-    Ok("Showing cart...")
+  def show(id: Int): Action[AnyContent] = Action { req =>
+    Ok("Showing cart for the user id: " + id)
   }
 
-  def addProduct(id: Int) = Action { req =>
+  def addProduct(id: Int): Action[AnyContent] = Action { req =>
     Ok("Adding to cart; product id:" + id)
   }
 
