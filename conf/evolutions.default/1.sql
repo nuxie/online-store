@@ -30,9 +30,7 @@ CREATE TABLE "invoices"
 (
     "id"          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "order_id"    VARCHAR NOT NULL,
-    "user_id"     VARCHAR NOT NULL,
     "payment_due" VARCHAR NOT NULL,
-    FOREIGN KEY ("user_id") references "users" (id),
     FOREIGN KEY ("order_id") references "orders" (id)
 );
 
