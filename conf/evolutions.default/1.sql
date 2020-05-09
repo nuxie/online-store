@@ -37,6 +37,7 @@ CREATE TABLE "invoices"
 CREATE TABLE "orders" --- TODO: refactor to orders / orders products
 (
     "id"         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "order_id"   INT     NOT NULL,
     "product_id" INT     NOT NULL,
     "user_id"    INT     NOT NULL,
     "quantity"   INT     NOT NULL,
