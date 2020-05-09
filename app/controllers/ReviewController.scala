@@ -4,7 +4,7 @@ import javax.inject._
 import play.api.mvc._
 
 @Singleton
-class ReviewsController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class ReviewController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
 
   def create = Action {
     Ok("Create review")

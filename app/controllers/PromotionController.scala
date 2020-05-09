@@ -4,7 +4,7 @@ import javax.inject._
 import play.api.mvc._
 
 @Singleton
-class PromotionsController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class PromotionController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
 
   def create = Action {
     Ok("Create promotion")

@@ -44,33 +44,33 @@ GET           /orders/update/:id                  controllers.OrderController.up
 PUT           /orders/update                      controllers.OrderController.updateHandle
 DELETE        /orders/delete/:id                  controllers.OrderController.delete(id: Int)
 
-GET           /products/new                       controllers.ProductsController.create
-POST          /products/new/:id                   controllers.ProductsController.createHandle(id: Int)
-GET           /products/all                       controllers.ProductsController.list
-GET           /products/details/:id               controllers.ProductsController.details(id: Int)
-GET           /products/update/:id                controllers.ProductsController.update(id: Int)
-PUT           /products/update                    controllers.ProductsController.updateHandle
-DELETE        /products/delete/:id                controllers.ProductsController.delete(id: Int)
+GET           /products/new                       controllers.ProductController.create
+POST          /products/new/:id                   controllers.ProductController.createHandle(id: Int)
+GET           /products/all                       controllers.ProductController.list
+GET           /products/details/:id               controllers.ProductController.details(id: Int)
+GET           /products/update/:id                controllers.ProductController.update(id: Int)
+PUT           /products/update                    controllers.ProductController.updateHandle
+DELETE        /products/delete/:id                controllers.ProductController.delete(id: Int)
 
-GET           /promotions/new                     controllers.PromotionsController.create
-POST          /promotions/new/:id                 controllers.PromotionsController.createHandle(id: Int)
-GET           /promotions/all                     controllers.PromotionsController.list
-GET           /promotions/details/:id             controllers.PromotionsController.details(id: Int)
-GET           /promotions/update/:id              controllers.PromotionsController.update(id: Int)
-PUT           /promotions/update                  controllers.PromotionsController.updateHandle
+GET           /promotions/new                     controllers.PromotionController.create
+POST          /promotions/new/:id                 controllers.PromotionController.createHandle(id: Int)
+GET           /promotions/all                     controllers.PromotionController.list
+GET           /promotions/details/:id             controllers.PromotionController.details(id: Int)
+GET           /promotions/update/:id              controllers.PromotionController.update(id: Int)
+PUT           /promotions/update                  controllers.PromotionController.updateHandle
 
-GET           /reviews/new                        controllers.ReviewsController.create
-POST          /reviews/new/:id                    controllers.ReviewsController.createHandle(id: Int)
-GET           /reviews/all                        controllers.ReviewsController.list
-GET           /reviews/details/:id                controllers.ReviewsController.details(id: Int)
-GET           /reviews/update/:id                 controllers.ReviewsController.update(id: Int)
-PUT           /reviews/update                     controllers.ReviewsController.updateHandle
-DELETE        /reviews/delete/:id                 controllers.ReviewsController.delete(id: Int)
+GET           /reviews/new                        controllers.ReviewController.create
+POST          /reviews/new/:id                    controllers.ReviewController.createHandle(id: Int)
+GET           /reviews/all                        controllers.ReviewController.list
+GET           /reviews/details/:id                controllers.ReviewController.details(id: Int)
+GET           /reviews/update/:id                 controllers.ReviewController.update(id: Int)
+PUT           /reviews/update                     controllers.ReviewController.updateHandle
+DELETE        /reviews/delete/:id                 controllers.ReviewController.delete(id: Int)
 
-GET           /stock/all                          controllers.ReviewsController.list
-GET           /stock/details/:id                  controllers.ReviewsController.details(id: Int)
-GET           /stock/update/:id                   controllers.ReviewsController.update(id: Int)
-PUT           /stock/update                       controllers.ReviewsController.updateHandle
+GET           /stock/all                          controllers.ReviewController.list
+GET           /stock/details/:id                  controllers.ReviewController.details(id: Int)
+GET           /stock/update/:id                   controllers.ReviewController.update(id: Int)
+PUT           /stock/update                       controllers.ReviewController.updateHandle
 
 GET           /wishlist/:id                       controllers.WishlistController.show(id: Int)
 PUT           /wishlist/add-product/:id           controllers.WishlistController.addProduct(id: Int)
