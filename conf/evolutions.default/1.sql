@@ -67,10 +67,7 @@ CREATE TABLE "reviews"
 (
     "id"          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "product_id"  INT     NOT NULL,
-    "user_id"     INT     NOT NULL,
-    "quantity"    INT     NOT NULL,
     "description" VARCHAR NOT NULL,
-    FOREIGN KEY ("user_id") references "users" (id),
     FOREIGN KEY ("product_id") references "products" (id)
 );
 
