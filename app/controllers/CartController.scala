@@ -6,11 +6,11 @@ import play.api.mvc._
 @Singleton
 class CartController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
 
-  def show(id: Int): Action[AnyContent] = Action { req =>
+  def show(id: Int) = Action { req =>
     Ok("Showing cart for the user id: " + id)
   }
 
-  def addProduct(id: Int): Action[AnyContent] = Action { req =>
+  def addProduct(id: Int) = Action { req =>
     Ok("Adding to cart; product id:" + id)
   }
 
