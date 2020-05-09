@@ -31,7 +31,9 @@ CREATE TABLE "invoices"
     "id"          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "order_id"    VARCHAR NOT NULL,
     "payment_due" VARCHAR NOT NULL,
-    FOREIGN KEY ("order_id") references "orders" (id)
+    "tax_number"  INT NOT NULL,
+    FOREIGN KEY ("order_id") references "orders" (id),
+    FOREIGN KEY ("tax_number") references "users" (tax_number)
 );
 
 CREATE TABLE "orders" --- TODO: refactor to orders / orders products
@@ -40,10 +42,8 @@ CREATE TABLE "orders" --- TODO: refactor to orders / orders products
     "product_id" INT     NOT NULL,
     "user_id"    INT     NOT NULL,
     "quantity"   INT     NOT NULL,
-    "tax_number" INT,
     FOREIGN KEY ("user_id") references "users" (id),
-    FOREIGN KEY ("product_id") references "products" (id),
-    FOREIGN KEY ("tax_number") references "users" (tax_number)
+    FOREIGN KEY ("product_id") references "products" (id)
 );
 
 CREATE TABLE "products"
