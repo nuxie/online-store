@@ -20,13 +20,13 @@ GET           /categories/update/:id              controllers.CategoryController
 PUT           /categories/update                  controllers.CategoryController.updateHandle
 DELETE        /categories/delete/:id              controllers.CategoryController.delete(id: Int)
 
-GET           /customers/new                      controllers.CustomerController.create
-POST          /customers/new/:id                  controllers.CustomerController.createHandle(id: Int)
-GET           /customers/all                      controllers.CustomerController.list
-GET           /customers/details/:id              controllers.CustomerController.details(id: Int)
-GET           /customers/update/:id               controllers.CustomerController.update(id: Int)
-PUT           /customers/update                   controllers.CustomerController.updateHandle
-DELETE        /customers/delete/:id               controllers.CustomerController.delete(id: Int)
+GET           /users/new                          controllers.UserController.create
+POST          /users/new/:id                      controllers.UserController.createHandle(id: Int)
+GET           /users/all                          controllers.UserController.list
+GET           /users/details/:id                  controllers.UserController.details(id: Int)
+GET           /users/update/:id                   controllers.UserController.update(id: Int)
+PUT           /users/update                       controllers.UserController.updateHandle
+DELETE        /users/delete/:id                   controllers.UserController.delete(id: Int)
 
 GET           /invoices/new                       controllers.InvoiceController.create
 POST          /invoices/new/:id                   controllers.InvoiceController.createHandle(id: Int)

@@ -4,7 +4,7 @@ import javax.inject._
 import play.api.mvc._
 
 @Singleton
-class CustomerController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class UserController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
 
   def create = Action {
     Ok("Create customer")
