@@ -1,6 +1,6 @@
 -- !Ups
 
-CREATE TABLE "carts"
+CREATE TABLE "carts" --- TODO: refactor to carts / carts products
 (
     "id"         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "user_id"    INT     NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE "invoices"
     FOREIGN KEY ("order_id") references "orders" (id)
 );
 
-CREATE TABLE "orders"
+CREATE TABLE "orders" --- TODO: refactor to orders / orders products
 (
     "id"         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "product_id" INT     NOT NULL,
