@@ -1,0 +1,16 @@
+@(order_products: Form[CreateOrderProductsForm])(implicit request: MessagesRequestHeader, flash: Flash)
+
+@import helper._
+
+@flash.get("success").getOrElse("")
+
+@form(routes.OrderProductsController.addHandle()) {
+    @helper.CSRF.formField
+    @inputText(order_products("order_id"))
+    @inputText(order_products("product_id"))
+    @inputText(order_products("quantity"))
+
+    <div class="buttons">
+        <input type="submit" value="Add to order"/>
+    </div>
+}

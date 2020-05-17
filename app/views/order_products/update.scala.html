@@ -1,0 +1,19 @@
+@(order_products: Form[UpdateOrderProductsForm])(implicit request: MessagesRequestHeader, flash: Flash)
+
+@import helper._
+
+@flash.get("success").getOrElse("")
+
+@form(routes.OrderProductsController.updateHandle) {
+
+    @helper.CSRF.formField
+    <input name="id" id="id" value="@order_products("id").value" type="hidden" />
+    @inputText(order_products("order_id"))
+    @inputText(order_products("product_id"))
+    @inputText(order_products("quantity"))
+
+    <div class="buttons">
+        <input type="submit" value="Update order products"/>
+    </div>
+
+}
