@@ -1,7 +1,7 @@
 package controllers
 
 import javax.inject._
-import models.CategoryRepository
+import models.{Category, CategoryRepository}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
@@ -36,7 +36,7 @@ class CategoryController @Inject()(cc: MessagesControllerComponents, categoryRep
       },
       category => {
         categoryRepo.create(category.name).map { _ =>
-          Redirect(routes.CategoryController.create()).flashing("success" -> "category.created")
+          Redirect(routes.CategoryController.create()).flashing("success" -> "category created")
         }
       }
     )
@@ -47,10 +47,10 @@ class CategoryController @Inject()(cc: MessagesControllerComponents, categoryRep
   }
 
   def details(id: Int): Action[AnyContent] = Action.async { implicit request =>
-    val cat = categoryRepo.details(id)
+    val cat: Future[Option[Category]] = categoryRepo.details(id)
     cat.map {
       case Some(c) => Ok(views.html.categorydetails(c))
-      // case None => Redirect( ) - to do
+      case None => Redirect("/categories/all")
     }
   }
 
@@ -59,14 +59,29 @@ class CategoryController @Inject()(cc: MessagesControllerComponents, categoryRep
     Redirect("/categories/all")
   }
 
-  def update(id: Int) = Action {
-    Ok("Update category number " + id)
+  def update(id: Int): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
+    categoryRepo.details(id).map {
+        case Some(c) => Ok(views.html.categoryupdate(updateCategoryForm.fill(UpdateCategoryForm(c.id, c.name))))
+        case None => Redirect("/categories/all")
+    }
   }
 
-  def updateHandle = Action {
-    Ok("Handle update category")
+  def updateHandle(): Action[AnyContent] = Action.async { implicit request =>
+    updateCategoryForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(
+          BadRequest(views.html.categoryupdate(errorForm))
+        )
+      },
+      category => {
+        categoryRepo.update(category.id, Category(category.id, category.name)).map { _ =>
+          Redirect(routes.CategoryController.update(category.id)).flashing("success" -> "category updated")
+        }
+      }
+    )
   }
-
 }
+
+
 case class CreateCategoryForm(name: String)
 case class UpdateCategoryForm(id: Int, name: String)
