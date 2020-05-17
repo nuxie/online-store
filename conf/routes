@@ -12,55 +12,55 @@ GET         /cart/:id                           controllers.CartController.show(
 POST        /cart/add-product/:id               controllers.CartController.addProduct(id: Int)
 GET         /cart/remove-product/:id            controllers.CartController.removeProduct(id: Int)
 
-GET         /categories/new                     controllers.CategoryController.create
-POST        /categories/new/:id                 controllers.CategoryController.createHandle(id: Int)
+GET         /categories/create                  controllers.CategoryController.create
+POST        /categories/createhandle            controllers.CategoryController.createHandle
 GET         /categories/all                     controllers.CategoryController.list
 GET         /categories/details/:id             controllers.CategoryController.details(id: Int)
 GET         /categories/update/:id              controllers.CategoryController.update(id: Int)
 POST        /categories/update                  controllers.CategoryController.updateHandle
 GET         /categories/delete/:id              controllers.CategoryController.delete(id: Int)
 
-GET         /users/new                          controllers.UserController.create
-POST        /users/new/:id                      controllers.UserController.createHandle(id: Int)
+GET         /users/create                       controllers.UserController.create
+POST        /users/createhandle                 controllers.UserController.createHandle
 GET         /users/all                          controllers.UserController.list
 GET         /users/details/:id                  controllers.UserController.details(id: Int)
 GET         /users/update/:id                   controllers.UserController.update(id: Int)
 POST        /users/update                       controllers.UserController.updateHandle
 GET         /users/delete/:id                   controllers.UserController.delete(id: Int)
 
-GET         /invoices/new                       controllers.InvoiceController.create
-POST        /invoices/new/:id                   controllers.InvoiceController.createHandle(id: Int)
+GET         /invoices/create                    controllers.InvoiceController.create
+POST        /invoices/createhandle              controllers.InvoiceController.createHandle
 GET         /invoices/all                       controllers.InvoiceController.list
 GET         /invoices/details/:id               controllers.InvoiceController.details(id: Int)
 GET         /invoices/update/:id                controllers.InvoiceController.update(id: Int)
 POST        /invoices/update                    controllers.InvoiceController.updateHandle
 GET         /invoices/delete/:id                controllers.InvoiceController.delete(id: Int)
 
-GET         /orders/new                         controllers.OrderController.create
-POST        /orders/new/:id                     controllers.OrderController.createHandle(id: Int)
+GET         /orders/create                      controllers.OrderController.create
+POST        /orders/createhandle                controllers.OrderController.createHandle
 GET         /orders/all                         controllers.OrderController.list
 GET         /orders/details/:id                 controllers.OrderController.details(id: Int)
 GET         /orders/update/:id                  controllers.OrderController.update(id: Int)
 POST        /orders/update                      controllers.OrderController.updateHandle
 GET         /orders/delete/:id                  controllers.OrderController.delete(id: Int)
 
-GET         /products/new                       controllers.ProductController.create
-POST        /products/new/:id                   controllers.ProductController.createHandle(id: Int)
+GET         /products/create                    controllers.ProductController.create
+POST        /products/createhandle              controllers.ProductController.createHandle
 GET         /products/all                       controllers.ProductController.list
 GET         /products/details/:id               controllers.ProductController.details(id: Int)
 GET         /products/update/:id                controllers.ProductController.update(id: Int)
 POST        /products/update                    controllers.ProductController.updateHandle
 GET         /products/delete/:id                controllers.ProductController.delete(id: Int)
 
-GET         /promotions/new                     controllers.PromotionController.create
-POST        /promotions/new/:id                 controllers.PromotionController.createHandle(id: Int)
+GET         /promotions/create                  controllers.PromotionController.create
+POST        /promotions/createhandle            controllers.PromotionController.createHandle
 GET         /promotions/all                     controllers.PromotionController.list
 GET         /promotions/details/:id             controllers.PromotionController.details(id: Int)
 GET         /promotions/update/:id              controllers.PromotionController.update(id: Int)
 POST        /promotions/update                  controllers.PromotionController.updateHandle
 
-GET         /reviews/new                        controllers.ReviewController.create
-POST        /reviews/new/:id                    controllers.ReviewController.createHandle(id: Int)
+GET         /reviews/create                     controllers.ReviewController.create
+POST        /reviews/createhandle               controllers.ReviewController.createHandle
 GET         /reviews/all                        controllers.ReviewController.list
 GET         /reviews/details/:id                controllers.ReviewController.details(id: Int)
 GET         /reviews/update/:id                 controllers.ReviewController.update(id: Int)

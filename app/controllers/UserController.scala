@@ -7,31 +7,31 @@ import play.api.mvc._
 class UserController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
 
   def create = Action {
-    Ok("Create customer")
+    Ok("Create user")
   }
 
-  def createHandle(id: Int) = Action {
-    Ok("Handle create customer number " + id)
+  def createHandle = Action {
+    Ok("Handle create user")
   }
 
   def list = Action {
-    Ok("All customers")
+    Ok("All users")
   }
 
   def details(id: Int) = Action {
-    Ok("Details of customer number " + id)
+    Ok("Details of user number " + id)
   }
 
   def delete(id: Int) = Action {
-    Ok("Delete customer number " + id)
+    Ok("Delete user number " + id)
   }
 
   def update(id: Int) = Action {
-    Ok("Update customer number " + id)
+    Ok("Update user number " + id)
   }
 
   def updateHandle = Action {
-    Ok("Handle update customer")
+    Ok("Handle update user")
   }
 
 }

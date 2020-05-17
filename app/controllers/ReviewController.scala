@@ -10,8 +10,8 @@ class ReviewController @Inject()(cc: ControllerComponents) extends AbstractContr
     Ok("Create review")
   }
 
-  def createHandle(id: Int) = Action {
-    Ok("Handle create review number " + id)
+  def createHandle = Action {
+    Ok("Handle create review")
   }
 
   def list = Action {

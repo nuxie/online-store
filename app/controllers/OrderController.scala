@@ -10,8 +10,8 @@ class OrderController @Inject()(cc: ControllerComponents) extends AbstractContro
     Ok("Create order")
   }
 
-  def createHandle(id: Int) = Action {
-    Ok("Handle create order number " + id)
+  def createHandle = Action {
+    Ok("Handle create order")
   }
 
   def list = Action {

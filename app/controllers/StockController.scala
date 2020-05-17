@@ -11,7 +11,7 @@ class StockController @Inject()(cc: ControllerComponents) extends AbstractContro
   }
 
   def details(id: Int) = Action {
-    Ok("Details of stock item number " + id)
+    Ok("Details of stock item")
   }
 
   def update(id: Int) = Action {

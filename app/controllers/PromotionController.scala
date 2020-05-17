@@ -10,8 +10,8 @@ class PromotionController @Inject()(cc: ControllerComponents) extends AbstractCo
     Ok("Create promotion")
   }
 
-  def createHandle(id: Int) = Action {
-    Ok("Handle create promotion number " + id)
+  def createHandle = Action {
+    Ok("Handle create promotion")
   }
 
   def list = Action {

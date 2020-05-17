@@ -10,8 +10,8 @@ class CategoryController @Inject()(cc: ControllerComponents) extends AbstractCon
     Ok("Create category")
   }
 
-  def createHandle(id: Int) = Action {
-    Ok("Handle create category number " + id)
+  def createHandle = Action {
+    Ok("Handle create category")
   }
 
   def list = Action {

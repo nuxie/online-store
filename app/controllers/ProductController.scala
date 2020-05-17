@@ -10,8 +10,8 @@ class ProductController @Inject()(cc: ControllerComponents) extends AbstractCont
       Ok("Create product")
     }
 
-    def createHandle(id: Int) = Action {
-      Ok("Handle create product number " + id)
+    def createHandle = Action {
+      Ok("Handle create product")
     }
 
     def list = Action {

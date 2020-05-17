@@ -10,8 +10,8 @@ class InvoiceController @Inject()(cc: ControllerComponents) extends AbstractCont
     Ok("Create invoice")
   }
 
-  def createHandle(id: Int) = Action {
-    Ok("Handle create invoice number " + id)
+  def createHandle = Action {
+    Ok("Handle create invoice")
   }
 
   def list = Action {
