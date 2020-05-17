@@ -54,8 +54,9 @@ class CategoryController @Inject()(cc: MessagesControllerComponents, categoryRep
     }
   }
 
-  def delete(id: Int) = Action {
-    Ok("Delete category number " + id)
+  def delete(id: Int): Action[AnyContent] = Action {
+    categoryRepo.delete(id)
+    Redirect("/categories/all")
   }
 
   def update(id: Int) = Action {
