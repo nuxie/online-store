@@ -40,7 +40,7 @@ class OrderProductsController @Inject()(cc: MessagesControllerComponents, orderP
         )
       },
       orderProd => {
-        orderProductsRepo.create(orderProd.order_id, orderProd.product_id, orderProd.quantity).map { _ =>
+        orderProductsRepo.add(orderProd.order_id, orderProd.product_id, orderProd.quantity).map { _ =>
           Redirect(routes.OrderProductsController.add()).flashing("success" -> "Order product(s) added")
         }
       }

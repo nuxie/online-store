@@ -24,7 +24,7 @@ class OrderProductsRepository @Inject()(dbConfigProvider: DatabaseConfigProvider
 
   private val orderProducts = TableQuery[OrderProductsTable]
 
-  def create(order_id: Int, product_id: Int, quantity: Int): Future[OrderProducts] = db.run {
+  def add(order_id: Int, product_id: Int, quantity: Int): Future[OrderProducts] = db.run {
     (orderProducts.map(op => (op.order_id, op.product_id, op.quantity))
       returning orderProducts.map(_.id)
       into { case ((order_id, product_id, quantity), id) => OrderProducts(id, order_id, product_id, quantity) }
