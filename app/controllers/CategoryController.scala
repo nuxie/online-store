@@ -24,14 +24,14 @@ class CategoryController @Inject()(cc: MessagesControllerComponents, categoryRep
   }
 
   def create: Action[AnyContent] = Action { implicit request =>
-    Ok(views.html.categoryadd(categoryForm))
+    Ok(views.html.category.add(categoryForm))
   }
 
   def createHandle: Action[AnyContent] = Action.async { implicit request =>
     categoryForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(
-          BadRequest(views.html.categoryadd(errorForm))
+          BadRequest(views.html.category.add(errorForm))
         )
       },
       category => {
@@ -43,13 +43,13 @@ class CategoryController @Inject()(cc: MessagesControllerComponents, categoryRep
   }
 
   def list: Action[AnyContent] = Action.async { implicit request =>
-    categoryRepo.list().map(i => Ok(views.html.categorylist(i)))
+    categoryRepo.list().map(i => Ok(views.html.category.list(i)))
   }
 
   def details(id: Int): Action[AnyContent] = Action.async { implicit request =>
     val cat: Future[Option[Category]] = categoryRepo.details(id)
     cat.map {
-      case Some(c) => Ok(views.html.categorydetails(c))
+      case Some(c) => Ok(views.html.category.details(c))
       case None => Redirect("/categories/all")
     }
   }
@@ -61,7 +61,7 @@ class CategoryController @Inject()(cc: MessagesControllerComponents, categoryRep
 
   def update(id: Int): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
     categoryRepo.details(id).map {
-        case Some(c) => Ok(views.html.categoryupdate(updateCategoryForm.fill(UpdateCategoryForm(c.id, c.name))))
+        case Some(c) => Ok(views.html.category.update(updateCategoryForm.fill(UpdateCategoryForm(c.id, c.name))))
         case None => Redirect("/categories/all")
     }
   }
@@ -70,12 +70,12 @@ class CategoryController @Inject()(cc: MessagesControllerComponents, categoryRep
     updateCategoryForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(
-          BadRequest(views.html.categoryupdate(errorForm))
+          BadRequest(views.html.category.update(errorForm))
         )
       },
       category => {
         categoryRepo.update(category.id, Category(category.id, category.name)).map { _ =>
-          Redirect(routes.CategoryController.update(category.id)).flashing("success" -> "category updated")
+          Redirect(routes.CategoryController.update(category.id: Int)).flashing("success" -> "category updated")
         }
       }
     )
