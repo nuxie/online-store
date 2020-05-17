@@ -25,21 +25,13 @@ CREATE TABLE users
     tax_number INT
 );
 
-CREATE TABLE carts_products
-(
-    id         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    cart_id    INT     NOT NULL,
-    product_id INT     NOT NULL,
-    quantity   INT     NOT NULL,
-    FOREIGN KEY (product_id) references products (id)
-);
-
-CREATE TABLE carts
+CREATE TABLE cart
 (
     id         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     user_id    INT     NOT NULL,
-    FOREIGN KEY (user_id) references users (id),
-    UNIQUE (user_id)
+    product_id INT     NOT NULL,
+    quantity   INT     NOT NULL,
+    FOREIGN KEY (product_id) references products (id)
 );
 
 CREATE TABLE orders_products
