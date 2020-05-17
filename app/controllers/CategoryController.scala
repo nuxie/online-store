@@ -1,10 +1,27 @@
 package controllers
 
 import javax.inject._
+import models.CategoryRepository
+import play.api.data.Form
+import play.api.data.Forms._
 import play.api.mvc._
+import scala.concurrent.ExecutionContext
 
 @Singleton
-class CategoryController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class CategoryController @Inject()(cc: MessagesControllerComponents, categoryRepo: CategoryRepository)
+                                  (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
+
+  val categoryForm: Form[CreateCategoryForm] = Form {
+    mapping(
+      "name" -> nonEmptyText,
+    )(CreateCategoryForm.apply)(CreateCategoryForm.unapply)
+  }
+  val updateCategoryForm: Form[UpdateCategoryForm] = Form {
+    mapping(
+      "id" -> number,
+      "name" -> nonEmptyText,
+    )(UpdateCategoryForm.apply)(UpdateCategoryForm.unapply)
+  }
 
   def create = Action {
     Ok("Create category")
@@ -35,3 +52,5 @@ class CategoryController @Inject()(cc: ControllerComponents) extends AbstractCon
   }
 
 }
+case class CreateCategoryForm(name: String)
+case class UpdateCategoryForm(id: Int, name: String)
