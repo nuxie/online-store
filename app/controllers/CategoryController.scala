@@ -42,8 +42,8 @@ class CategoryController @Inject()(cc: MessagesControllerComponents, categoryRep
     )
   }
 
-  def list = Action {
-    Ok("All categories")
+  def list: Action[AnyContent] = Action.async { implicit request =>
+    categoryRepo.list().map(i => Ok(views.html.categorylist(i)))
   }
 
   def details(id: Int) = Action {
