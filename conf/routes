@@ -8,9 +8,13 @@ GET         /                                   controllers.HomeController.index
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                       controllers.Assets.versioned(path="/public", file: Asset)
 
-GET         /cart/:id                           controllers.CartController.show(id: Int)
-POST        /cart/add-product/:id               controllers.CartController.addProduct(id: Int)
-GET         /cart/remove-product/:id            controllers.CartController.removeProduct(id: Int)
+GET         /cart/create                        controllers.CartController.add
+POST        /cart/createhandle                  controllers.CartController.addHandle
+GET         /cart/all                           controllers.CartController.list
+GET         /cart/details/:id                   controllers.CartController.details(id: Int)
+GET         /cart/update/:id                    controllers.CartController.update(id: Int)
+POST        /cart/update                        controllers.CartController.updateHandle
+GET         /cart/delete/:id                    controllers.CartController.delete(id: Int)
 
 GET         /categories/create                  controllers.CategoryController.create
 POST        /categories/createhandle            controllers.CategoryController.createHandle
