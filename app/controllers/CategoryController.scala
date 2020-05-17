@@ -46,8 +46,12 @@ class CategoryController @Inject()(cc: MessagesControllerComponents, categoryRep
     categoryRepo.list().map(i => Ok(views.html.categorylist(i)))
   }
 
-  def details(id: Int) = Action {
-    Ok("Details of category number " + id)
+  def details(id: Int): Action[AnyContent] = Action.async { implicit request =>
+    val cat = categoryRepo.details(id)
+    cat.map {
+      case Some(c) => Ok(views.html.categorydetails(c))
+      // case None => Redirect( ) - to do
+    }
   }
 
   def delete(id: Int) = Action {
