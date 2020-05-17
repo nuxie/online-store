@@ -44,6 +44,14 @@ GET         /orders/update/:id                  controllers.OrderController.upda
 POST        /orders/update                      controllers.OrderController.updateHandle
 GET         /orders/delete/:id                  controllers.OrderController.delete(id: Int)
 
+GET         /order_products/add                 controllers.OrderProductsController.add
+POST        /order_products/addHandle           controllers.OrderProductsController.addHandle
+GET         /order_products/all                 controllers.OrderProductsController.list
+GET         /order_products/details/:id         controllers.OrderProductsController.details(id: Int)
+GET         /order_products/update/:id          controllers.OrderProductsController.update(id: Int)
+POST        /order_products/update              controllers.OrderProductsController.updateHandle
+GET         /order_products/delete/:id          controllers.OrderProductsController.delete(id: Int)
+
 GET         /products/create                    controllers.ProductController.create
 POST        /products/createhandle              controllers.ProductController.createHandle
 GET         /products/all                       controllers.ProductController.list
