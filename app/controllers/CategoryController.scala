@@ -5,7 +5,7 @@ import models.CategoryRepository
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
-import scala.concurrent.ExecutionContext
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CategoryController @Inject()(cc: MessagesControllerComponents, categoryRepo: CategoryRepository)
@@ -23,12 +23,23 @@ class CategoryController @Inject()(cc: MessagesControllerComponents, categoryRep
     )(UpdateCategoryForm.apply)(UpdateCategoryForm.unapply)
   }
 
-  def create = Action {
-    Ok("Create category")
+  def create: Action[AnyContent] = Action { implicit request =>
+    Ok(views.html.categoryadd(categoryForm))
   }
 
-  def createHandle = Action {
-    Ok("Handle create category")
+  def createHandle: Action[AnyContent] = Action.async { implicit request =>
+    categoryForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(
+          BadRequest(views.html.categoryadd(errorForm))
+        )
+      },
+      category => {
+        categoryRepo.create(category.name).map { _ =>
+          Redirect(routes.CategoryController.create()).flashing("success" -> "category.created")
+        }
+      }
+    )
   }
 
   def list = Action {
