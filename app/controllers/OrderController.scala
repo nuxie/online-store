@@ -1,37 +1,87 @@
 package controllers
 
 import javax.inject._
+import models.{Order, OrderRepository}
+import play.api.data.Form
+import play.api.data.Forms._
 import play.api.mvc._
 
+import scala.concurrent.{ExecutionContext, Future}
+
 @Singleton
-class OrderController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class OrderController @Inject()(cc: MessagesControllerComponents, orderRepo: OrderRepository)
+                                 (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
 
-  def create = Action {
-    Ok("Create order")
+  val orderForm: Form[CreateOrderForm] = Form {
+    mapping(
+      "user_id" -> number
+    )(CreateOrderForm.apply)(CreateOrderForm.unapply)
+  }
+  val updateOrderForm: Form[UpdateOrderForm] = Form {
+    mapping(
+      "id" -> number,
+      "user_id" -> number
+    )(UpdateOrderForm.apply)(UpdateOrderForm.unapply)
   }
 
-  def createHandle = Action {
-    Ok("Handle create order")
+  def create: Action[AnyContent] = Action { implicit request =>
+    Ok(views.html.order.add(orderForm))
   }
 
-  def list = Action {
-    Ok("All orders")
+  def createHandle: Action[AnyContent] = Action.async { implicit request =>
+    orderForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(
+          BadRequest(views.html.order.add(errorForm))
+        )
+      },
+      order => {
+        orderRepo.create(order.user_id).map { _ =>
+          Redirect(routes.OrderController.create()).flashing("success" -> "Order created")
+        }
+      }
+    )
   }
 
-  def details(id: Int) = Action {
-    Ok("Details of order number " + id)
+  def list: Action[AnyContent] = Action.async { implicit request =>
+    orderRepo.list().map(i => Ok(views.html.order.list(i)))
   }
 
-  def delete(id: Int) = Action {
-    Ok("Delete order number " + id)
+  def details(id: Int): Action[AnyContent] = Action.async { implicit request =>
+    val cat: Future[Option[Order]] = orderRepo.details(id)
+    cat.map {
+      case Some(c) => Ok(views.html.order.details(c))
+      case None => Redirect("/orders/all")
+    }
   }
 
-  def update(id: Int) = Action {
-    Ok("Update order number " + id)
+  def delete(id: Int): Action[AnyContent] = Action {
+    orderRepo.delete(id)
+    Redirect("/orders/all")
   }
 
-  def updateHandle = Action {
-    Ok("Handle update order")
+  def update(id: Int): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
+    orderRepo.details(id).map {
+      case Some(i) => Ok(views.html.order.update(updateOrderForm.fill(UpdateOrderForm(i.id, i.user_id))))
+      case None => Redirect("/orders/all")
+    }
   }
 
+  def updateHandle(): Action[AnyContent] = Action.async { implicit request =>
+    updateOrderForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(
+          BadRequest(views.html.order.update(errorForm))
+        )
+      },
+      order => {
+        orderRepo.update(order.id, Order(order.id, order.user_id)).map { _ =>
+          Redirect(routes.OrderController.update(order.id: Int)).flashing("success" -> "Order updated")
+        }
+      }
+    )
+  }
 }
+
+case class CreateOrderForm(user_id: Int)
+case class UpdateOrderForm(id: Int, user_id: Int)
