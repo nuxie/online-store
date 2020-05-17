@@ -1,12 +1,9 @@
 -- !Ups
 
-INSERT INTO carts (id, user_id)
-VALUES (1, 1),
-       (2, 2);
-
-INSERT INTO carts_products (id, cart_id, product_id, quantity)
+INSERT INTO carts (id, user_id, product_id, quantity)
 VALUES (1, 1, 1, 2),
-       (2, 1, 2, 1);
+       (1, 1, 2, 1),
+       (2, 2, 2, 3);
 
 INSERT INTO categories (id, name)
 VALUES (1, 'A'),

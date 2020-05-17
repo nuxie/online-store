@@ -25,7 +25,7 @@ CREATE TABLE users
     tax_number INT
 );
 
-CREATE TABLE cart
+CREATE TABLE carts
 (
     id         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     user_id    INT     NOT NULL,
