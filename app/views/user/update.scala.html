@@ -1,0 +1,19 @@
+@(user: Form[UpdateUserForm])(implicit request: MessagesRequestHeader, flash: Flash)
+
+@import helper._
+
+@flash.get("success").getOrElse("")
+
+@form(routes.UserController.updateHandle) {
+
+    @helper.CSRF.formField
+    <input name="id" id="id" value="@user("id").value" type="hidden" />
+    @inputText(user("name"))
+    @inputText(user("e_mail"))
+    @inputText(user("tax_number"))
+
+    <div class="buttons">
+        <input type="submit" value="Update user"/>
+    </div>
+
+}
