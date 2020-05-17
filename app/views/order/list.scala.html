@@ -1,0 +1,14 @@
+@(orders: Seq[Order])
+
+<table aria-describedby="orders">
+    <tr>
+        <th id="name">ID</th>
+        <th id="name">User ID</th>
+    </tr>
+    @for(order <- orders) {
+        <tr>
+            <td>@order.id</td>
+            <td>@order.user_id</td>
+        </tr>
+    }
+</table>

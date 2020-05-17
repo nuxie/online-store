@@ -1,0 +1,14 @@
+@(order: Form[CreateOrderForm])(implicit request: MessagesRequestHeader, flash: Flash)
+
+@import helper._
+
+@flash.get("success").getOrElse("")
+
+@form(routes.OrderController.createHandle()) {
+    @helper.CSRF.formField
+    @inputText(order("user_id"))
+
+    <div class="buttons">
+        <input type="submit" value="Create order"/>
+    </div>
+}
