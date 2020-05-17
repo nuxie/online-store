@@ -13,7 +13,7 @@ class CategoryRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(imp
   import dbConfig._
   import profile.api._
 
-  class CategoryTable(tag: Tag) extends Table[Category](tag, "category") {
+  class CategoryTable(tag: Tag) extends Table[Category](tag, "categories") {
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
 
     def name = column[String]("name")
