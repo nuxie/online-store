@@ -70,6 +70,7 @@ GET         /promotions/all                     controllers.PromotionController.
 GET         /promotions/details/:id             controllers.PromotionController.details(id: Int)
 GET         /promotions/update/:id              controllers.PromotionController.update(id: Int)
 POST        /promotions/update                  controllers.PromotionController.updateHandle
+GET         /promotions/delete/:id                controllers.ProductController.delete(id: Int)
 
 GET         /reviews/create                     controllers.ReviewController.create
 POST        /reviews/createhandle               controllers.ReviewController.createHandle
