@@ -102,6 +102,7 @@ DROP TABLE categories;
 DROP TABLE users;
 DROP TABLE invoices;
 DROP TABLE orders;
+DROP TABLE orders_products;
 DROP TABLE products;
 DROP TABLE promotions;
 DROP TABLE reviews;
