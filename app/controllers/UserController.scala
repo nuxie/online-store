@@ -1,37 +1,90 @@
 package controllers
 
 import javax.inject._
+import models.{User, UserRepository}
+import play.api.data.Form
+import play.api.data.Forms._
 import play.api.mvc._
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class UserController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class UserController @Inject()(cc: MessagesControllerComponents, userRepo: UserRepository)
+                              (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
 
-  def create = Action {
-    Ok("Create user")
+  val userForm: Form[CreateUserForm] = Form {
+    mapping(
+      "name" -> nonEmptyText,
+      "e_mail" -> email,
+      "tax_number" -> optional(number),
+    )(CreateUserForm.apply)(CreateUserForm.unapply)
+  }
+  val updateUserForm: Form[UpdateUserForm] = Form {
+    mapping(
+      "id" -> number,
+      "name" -> nonEmptyText,
+      "e_mail" -> email,
+      "tax_number" -> optional(number),
+    )(UpdateUserForm.apply)(UpdateUserForm.unapply)
   }
 
-  def createHandle = Action {
-    Ok("Handle create user")
+  def create: Action[AnyContent] = Action { implicit request =>
+    Ok(views.html.user.add(userForm))
   }
 
-  def list = Action {
-    Ok("All users")
+  def createHandle: Action[AnyContent] = Action.async { implicit request =>
+    userForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(
+          BadRequest(views.html.user.add(errorForm))
+        )
+      },
+      user => {
+        userRepo.create(user.name, user.e_mail, user.tax_number).map { _ =>
+          Redirect(routes.UserController.create()).flashing("success" -> "User created")
+        }
+      }
+    )
   }
 
-  def details(id: Int) = Action {
-    Ok("Details of user number " + id)
+  def list: Action[AnyContent] = Action.async { implicit request =>
+    userRepo.list().map(i => Ok(views.html.user.list(i)))
   }
 
-  def delete(id: Int) = Action {
-    Ok("Delete user number " + id)
+  def details(id: Int): Action[AnyContent] = Action.async { implicit request =>
+    val cat: Future[Option[User]] = userRepo.details(id)
+    cat.map {
+      case Some(c) => Ok(views.html.user.details(c))
+      case None => Redirect("/users/all")
+    }
   }
 
-  def update(id: Int) = Action {
-    Ok("Update user number " + id)
+  def delete(id: Int): Action[AnyContent] = Action {
+    userRepo.delete(id)
+    Redirect("/users/all")
   }
 
-  def updateHandle = Action {
-    Ok("Handle update user")
+  def update(id: Int): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
+    userRepo.details(id).map {
+      case Some(u) => Ok(views.html.user.update(updateUserForm.fill(UpdateUserForm(u.id, u.name, u.e_mail, u.tax_number))))
+      case None => Redirect("/users/all")
+    }
   }
 
+  def updateHandle(): Action[AnyContent] = Action.async { implicit request =>
+    updateUserForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(
+          BadRequest(views.html.user.update(errorForm))
+        )
+      },
+      user => {
+        userRepo.update(user.id, User(user.id, user.name, user.e_mail, user.tax_number)).map { _ =>
+          Redirect(routes.UserController.update(user.id: Int)).flashing("success" -> "User updated")
+        }
+      }
+    )
+  }
 }
+
+case class CreateUserForm(name: String, e_mail: String, tax_number: Option[Int])
+case class UpdateUserForm(id: Int, name: String, e_mail: String, tax_number: Option[Int])
