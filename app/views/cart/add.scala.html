@@ -1,0 +1,16 @@
+@(cart: Form[CreateCartForm])(implicit request: MessagesRequestHeader, flash: Flash)
+
+@import helper._
+
+@flash.get("success").getOrElse("")
+
+@form(routes.CartController.addHandle()) {
+    @helper.CSRF.formField
+    @inputText(cart("user_id"))
+    @inputText(cart("product_id"))
+    @inputText(cart("quantity"))
+
+    <div class="buttons">
+        <input type="submit" value="Add to cart"/>
+    </div>
+}
