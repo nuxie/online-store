@@ -2,10 +2,12 @@
 
 <table aria-describedby="categories">
     <tr>
+        <th id="id">ID</th>
         <th id="name">Name</th>
     </tr>
     @for(category <- categories) {
         <tr>
+            <td>@category.id</td>
             <td>@category.name</td>
         </tr>
     }
