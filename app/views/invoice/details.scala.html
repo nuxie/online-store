@@ -1,0 +1,13 @@
+@(invoice: Invoice)
+
+<table aria-describedby="invoices">
+    <tr>
+        <td id="id">ID: @invoice.id</td>
+    </tr>
+    <tr>
+        <td id="order_id">Order id: @invoice.order_id</td>
+    </tr>
+    <tr>
+        <td id="payment_due">Payment due: @invoice.payment_due</td>
+    </tr>
+</table>

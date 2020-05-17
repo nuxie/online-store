@@ -1,0 +1,14 @@
+@(invoices: Seq[Invoice])
+
+<table aria-describedby="invoices">
+    <tr>
+        <th id="name">Order id</th>
+        <th id="name">Payment due</th>
+    </tr>
+    @for(invoice <- invoices) {
+        <tr>
+            <td>@invoice.order_id</td>
+            <td>@invoice.payment_due</td>
+        </tr>
+    }
+</table>

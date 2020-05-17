@@ -1,0 +1,15 @@
+@(invoice: Form[CreateInvoiceForm])(implicit request: MessagesRequestHeader, flash: Flash)
+
+@import helper._
+
+@flash.get("success").getOrElse("")
+
+@form(routes.InvoiceController.createHandle()) {
+    @helper.CSRF.formField
+    @inputText(invoice("order_id"))
+    @inputText(invoice("payment_due"))
+
+    <div class="buttons">
+        <input type="submit" value="Create invoice"/>
+    </div>
+}
