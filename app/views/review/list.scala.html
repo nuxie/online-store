@@ -1,0 +1,14 @@
+@(reviews: Seq[Review])
+
+<table aria-describedby="reviews">
+    <tr>
+        <th id="id">Review ID</th>
+        <th id="product_id">Product ID</th>
+    </tr>
+    @for(review <- reviews) {
+        <tr>
+            <td>@review.id</td>
+            <td>@review.product_id</td>
+        </tr>
+    }
+</table>
