@@ -25,7 +25,7 @@ class CartRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implici
   private val cart = TableQuery[CartTable]
 
   def add(user_id: Int, product_id: Int, quantity: Int): Future[Cart] = db.run {
-    (cart.map(c => (c.user_id, c.product_id, c.quantity))
+    (cart.map(op => (op.user_id, op.product_id, op.quantity))
       returning cart.map(_.id)
       into { case ((user_id, product_id, quantity), id) => Cart(id, user_id, product_id, quantity) }
       )  += (user_id, product_id, quantity)
