@@ -1,0 +1,19 @@
+@(promotion: Promotion)
+
+<table aria-describedby="promotions">
+    <tr>
+        <td id="id">ID: @promotion.id</td>
+    </tr>
+    <tr>
+        <td id="name">Name: @promotion.name</td>
+    </tr>
+    <tr>
+        <td id="flag_active">Is promo active?: @promotion.flag_active</td>
+    </tr>
+    <tr>
+        <td id="product_id">Product ID: @promotion.product_id</td>
+    </tr>
+    <tr>
+        <td id="percentage_sale">Perc. sale: @promotion.percentage_sale</td>
+    </tr>
+</table>

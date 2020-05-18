@@ -1,0 +1,17 @@
+@(promotion: Form[CreatePromotionForm])(implicit request: MessagesRequestHeader, flash: Flash)
+
+@import helper._
+
+@flash.get("success").getOrElse("")
+
+@form(routes.PromotionController.createHandle()) {
+    @helper.CSRF.formField
+    @inputText(promotion("name"))
+    @inputText(promotion("flag_active"))
+    @inputText(promotion("product_id"))
+    @inputText(promotion("percentage_sale"))
+
+    <div class="buttons">
+        <input type="submit" value="Create promotion"/>
+    </div>
+}
