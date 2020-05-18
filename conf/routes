@@ -80,18 +80,18 @@ GET         /reviews/update/:id                controllers.ReviewController.upda
 POST        /reviews/update                    controllers.ReviewController.updateHandle
 GET         /reviews/delete/:id                controllers.ReviewController.delete(id: Int)
 
-GET         /stock/add                         controllers.StockController.add
-POST        /stock/addhandle                   controllers.StockController.addHandle
-GET         /stock/all                         controllers.StockController.list
-GET         /stock/details/:id                 controllers.StockController.details(id: Int)
-GET         /stock/update/:id                  controllers.StockController.update(id: Int)
-POST        /stock/update                      controllers.StockController.updateHandle
-GET         /stock/delete/:id                  controllers.StockController.delete(id: Int)
+GET         /stocks/add                         controllers.StockController.add
+POST        /stocks/addhandle                   controllers.StockController.addHandle
+GET         /stocks/all                         controllers.StockController.list
+GET         /stocks/details/:id                 controllers.StockController.details(id: Int)
+GET         /stocks/update/:id                  controllers.StockController.update(id: Int)
+POST        /stocks/update                      controllers.StockController.updateHandle
+GET         /stocks/delete/:id                  controllers.StockController.delete(id: Int)
 
-GET         /wishlist/add                      controllers.WishlistController.add
-POST        /wishlist/addhandle                controllers.WishlistController.addHandle
-GET         /wishlist/all                      controllers.WishlistController.list
-GET         /wishlist/details/:id              controllers.WishlistController.details(id: Int)
-GET         /wishlist/update/:id               controllers.WishlistController.update(id: Int)
-POST        /wishlist/update                   controllers.WishlistController.updateHandle
-GET         /wishlist/delete/:id               controllers.WishlistController.delete(id: Int)
+GET         /wishlists/add                      controllers.WishlistController.add
+POST        /wishlists/addhandle                controllers.WishlistController.addHandle
+GET         /wishlists/all                      controllers.WishlistController.list
+GET         /wishlists/details/:id              controllers.WishlistController.details(id: Int)
+GET         /wishlists/update/:id               controllers.WishlistController.update(id: Int)
+POST        /wishlists/update                   controllers.WishlistController.updateHandle
+GET         /wishlists/delete/:id               controllers.WishlistController.delete(id: Int)
