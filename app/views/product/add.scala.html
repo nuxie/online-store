@@ -1,0 +1,17 @@
+@(product: Form[CreateProductForm])(implicit request: MessagesRequestHeader, flash: Flash)
+
+@import helper._
+
+@flash.get("success").getOrElse("")
+
+@form(routes.ProductController.createHandle()) {
+    @helper.CSRF.formField
+    @inputText(product("name"))
+    @inputText(product("description"))
+    @inputText(product("category_id"))
+    @inputText(product("price"))
+
+    <div class="buttons">
+        <input type="submit" value="Create product"/>
+    </div>
+}

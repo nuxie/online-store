@@ -1,0 +1,14 @@
+@(products: Seq[Product])
+
+<table aria-describedby="products">
+    <tr>
+        <th id="id">ID</th>
+        <th id="name">Name</th>
+    </tr>
+    @for(product <- products) {
+        <tr>
+            <td>@product.id</td>
+            <td>@product.name</td>
+        </tr>
+    }
+</table>
