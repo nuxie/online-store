@@ -44,13 +44,13 @@ class OrderController @Inject()(cc: MessagesControllerComponents, orderRepo: Ord
   }
 
   def list: Action[AnyContent] = Action.async { implicit request =>
-    orderRepo.list().map(i => Ok(views.html.order.list(i)))
+    orderRepo.list().map(o => Ok(views.html.order.list(o)))
   }
 
   def details(id: Int): Action[AnyContent] = Action.async { implicit request =>
-    val cat: Future[Option[Order]] = orderRepo.details(id)
-    cat.map {
-      case Some(c) => Ok(views.html.order.details(c))
+    val ord: Future[Option[Order]] = orderRepo.details(id)
+    ord.map {
+      case Some(o) => Ok(views.html.order.details(o))
       case None => Redirect("/orders/all")
     }
   }

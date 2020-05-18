@@ -47,13 +47,13 @@ class UserController @Inject()(cc: MessagesControllerComponents, userRepo: UserR
   }
 
   def list: Action[AnyContent] = Action.async { implicit request =>
-    userRepo.list().map(i => Ok(views.html.user.list(i)))
+    userRepo.list().map(u => Ok(views.html.user.list(u)))
   }
 
   def details(id: Int): Action[AnyContent] = Action.async { implicit request =>
-    val cat: Future[Option[User]] = userRepo.details(id)
-    cat.map {
-      case Some(c) => Ok(views.html.user.details(c))
+    val usr: Future[Option[User]] = userRepo.details(id)
+    usr.map {
+      case Some(u) => Ok(views.html.user.details(u))
       case None => Redirect("/users/all")
     }
   }

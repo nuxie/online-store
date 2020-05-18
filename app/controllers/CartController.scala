@@ -52,9 +52,9 @@ class CartController @Inject()(cc: MessagesControllerComponents, cartRepo: CartR
   }
 
   def details(id: Int): Action[AnyContent] = Action.async { implicit request =>
-    val or_prod: Future[Option[Cart]] = cartRepo.details(id)
-    or_prod.map {
-      case Some(op) => Ok(views.html.cart.details(op))
+    val car: Future[Option[Cart]] = cartRepo.details(id)
+    car.map {
+      case Some(c) => Ok(views.html.cart.details(c))
       case None => Redirect("/cart/all")
     }
   }

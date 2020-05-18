@@ -43,7 +43,7 @@ class CategoryController @Inject()(cc: MessagesControllerComponents, categoryRep
   }
 
   def list: Action[AnyContent] = Action.async { implicit request =>
-    categoryRepo.list().map(i => Ok(views.html.category.list(i)))
+    categoryRepo.list().map(c => Ok(views.html.category.list(c)))
   }
 
   def details(id: Int): Action[AnyContent] = Action.async { implicit request =>

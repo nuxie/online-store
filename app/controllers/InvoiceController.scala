@@ -50,9 +50,9 @@ class InvoiceController @Inject()(cc: MessagesControllerComponents, invoiceRepo:
   }
 
   def details(id: Int): Action[AnyContent] = Action.async { implicit request =>
-    val cat: Future[Option[Invoice]] = invoiceRepo.details(id)
-    cat.map {
-      case Some(c) => Ok(views.html.invoice.details(c))
+    val inv: Future[Option[Invoice]] = invoiceRepo.details(id)
+    inv.map {
+      case Some(i) => Ok(views.html.invoice.details(i))
       case None => Redirect("/invoices/all")
     }
   }

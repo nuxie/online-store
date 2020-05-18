@@ -1,37 +1,94 @@
 package controllers
 
 import javax.inject._
+import models.{Product, ProductRepository}
+import play.api.data.Form
+import play.api.data.Forms._
 import play.api.mvc._
 
+import scala.concurrent.{ExecutionContext, Future}
+
 @Singleton
-class ProductController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class ProductController @Inject()(cc: MessagesControllerComponents, productRepo: ProductRepository)
+                                 (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
 
-    def create = Action {
-      Ok("Create product")
+  val productForm: Form[CreateProductForm] = Form {
+    mapping(
+      "name" -> nonEmptyText,
+      "description" -> nonEmptyText,
+      "category_id" -> number,
+      "price" -> longNumber
+    )(CreateProductForm.apply)(CreateProductForm.unapply)
+  }
+  val updateProductForm: Form[UpdateProductForm] = Form {
+    mapping(
+      "id" -> number,
+      "name" -> nonEmptyText,
+      "description" -> nonEmptyText,
+      "category_id" -> number,
+      "price" -> longNumber
+    )(UpdateProductForm.apply)(UpdateProductForm.unapply)
+  }
+
+  def create: Action[AnyContent] = Action { implicit request =>
+    Ok(views.html.product.add(productForm))
+  }
+
+  def createHandle: Action[AnyContent] = Action.async { implicit request =>
+    productForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(
+          BadRequest(views.html.product.add(errorForm))
+        )
+      },
+      product => {
+        productRepo.add(product.name, product.description, product.category_id, product.price).map { _ =>
+          Redirect(routes.ProductController.create()).flashing("success" -> "Product created")
+        }
+      }
+    )
+  }
+
+  def list: Action[AnyContent] = Action.async { implicit request =>
+    productRepo.list().map(i => Ok(views.html.product.list(i)))
+  }
+
+  def details(id: Int): Action[AnyContent] = Action.async { implicit request =>
+    val prod: Future[Option[Product]] = productRepo.details(id)
+    prod.map {
+      case Some(p) => Ok(views.html.product.details(p))
+      case None => Redirect("/products/all")
     }
+  }
 
-    def createHandle = Action {
-      Ok("Handle create product")
+  def delete(id: Int): Action[AnyContent] = Action {
+    productRepo.delete(id)
+    Redirect("/products/all")
+  }
+
+  def update(id: Int): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
+    productRepo.details(id).map {
+      case Some(p) => Ok(views.html.product.update(updateProductForm.fill(UpdateProductForm(p.id, p.name, p.description,
+                                                      p.category_id, p.price))))
+      case None => Redirect("/products/all")
     }
+  }
 
-    def list = Action {
-      Ok("All products")
-    }
-
-    def details(id: Int) = Action {
-      Ok("Details of product number " + id)
-    }
-
-    def delete(id: Int) = Action {
-      Ok("Delete product number " + id)
-    }
-
-    def update(id: Int) = Action {
-      Ok("Update product number " + id)
-    }
-
-    def updateHandle = Action {
-      Ok("Handle update product")
-    }
-
+  def updateHandle(): Action[AnyContent] = Action.async { implicit request =>
+    updateProductForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(
+          BadRequest(views.html.product.update(errorForm))
+        )
+      },
+      product => {
+        productRepo.update(product.id, Product(product.id, product.name, product.description, product.category_id, product.price)).map { _ =>
+          Redirect(routes.ProductController.update(product.id: Int)).flashing("success" -> "Product updated")
+        }
+      }
+    )
+  }
 }
+
+case class CreateProductForm(name: String, description: String, category_id: Int, price: Long)
+case class UpdateProductForm(id: Int, name: String, description: String, category_id: Int, price: Long)
