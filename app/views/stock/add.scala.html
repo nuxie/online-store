@@ -1,0 +1,15 @@
+@(stock: Form[CreateStockForm])(implicit request: MessagesRequestHeader, flash: Flash)
+
+@import helper._
+
+@flash.get("success").getOrElse("")
+
+@form(routes.StockController.addHandle()) {
+    @helper.CSRF.formField
+    @inputText(stock("product_id"))
+    @inputText(stock("quantity"))
+
+    <div class="buttons">
+        <input type="submit" value="Add stock"/>
+    </div>
+}
