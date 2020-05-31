@@ -101,7 +101,7 @@ GET         /products/delete/:id               controllers.ProductController.del
 
 GET         /api/promotions                    controllers.PromotionController.listJSON()
 GET         /api/promotions/:id                controllers.PromotionController.detailsJSON(id: Int)
-POST        /api/promotions                    controllers.PromotionController.createJSON()
+POST        /api/promotions                    controllers.PromotionController.addJSON()
 PUT         /api/promotions/:id                controllers.PromotionController.updateJSON(id: Int)
 DELETE      /api/promotions/:id                controllers.PromotionController.deleteJSON(id: Int)
 GET         /promotions/create                 controllers.PromotionController.create
