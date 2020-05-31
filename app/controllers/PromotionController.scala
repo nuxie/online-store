@@ -4,6 +4,7 @@ import javax.inject._
 import models.{Promotion, PromotionRepository}
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -87,6 +88,51 @@ class PromotionController @Inject()(cc: MessagesControllerComponents, promotionR
         }
       }
     )
+  }
+
+  def listJSON: Action[AnyContent] = Action.async { implicit request =>
+    promotionRepo.list().map(p =>
+      Ok(Json.toJson(p))
+    )
+  }
+
+  def detailsJSON(id: Int): Action[AnyContent] = Action.async { implicit request =>
+    promotionRepo.details(id).map {
+      case Some(p) => Ok(Json.toJson(p))
+      case None => NotFound(Json.obj(
+        "status" -> "Error",
+        "message" -> "Not found"
+      ))
+    }
+  }
+
+  def createJSON(): Action[JsValue] = Action(parse.json) { request =>
+    request.body.validate[Promotion].fold({ errors =>
+      BadRequest(Json.obj(
+        "status" -> "Error",
+        "message" -> "Bad JSON"
+      ))
+    }, { promo =>
+      promotionRepo.add(promo.name, promo.flag_active, promo.product_id, promo.percentage_sale)
+      Ok(Json.obj("status" -> "OK", "message" -> "Promotion created"))
+    })
+  }
+
+  def updateJSON(id: Int): Action[JsValue] = Action(parse.json) {  request =>
+    request.body.validate[Promotion].fold({ errors =>
+      BadRequest(Json.obj(
+        "status" -> "Error",
+        "message" -> "Bad JSON"
+      ))
+    }, { promo =>
+      promotionRepo.update(id, promo)
+      Ok(Json.obj("status" -> "OK", "message" -> "Promotion updated"))
+    })
+  }
+
+  def deleteJSON(id: Int): Action[JsValue] = Action(parse.json) {  request =>
+    promotionRepo.delete(id)
+    Ok(Json.obj("status" -> "OK", "message" -> "Promotion deleted"))
   }
 }
 
