@@ -4,6 +4,7 @@ import javax.inject._
 import models.{Stock, StockRepository}
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -82,6 +83,51 @@ class StockController @Inject()(cc: MessagesControllerComponents, stockRepo: Sto
         }
       }
     )
+  }
+
+  def listJSON: Action[AnyContent] = Action.async { implicit request =>
+    stockRepo.list().map(p =>
+      Ok(Json.toJson(p))
+    )
+  }
+
+  def detailsJSON(id: Int): Action[AnyContent] = Action.async { implicit request =>
+    stockRepo.details(id).map {
+      case Some(p) => Ok(Json.toJson(p))
+      case None => NotFound(Json.obj(
+        "status" -> "Error",
+        "message" -> "Not found"
+      ))
+    }
+  }
+
+  def addJSON(): Action[JsValue] = Action(parse.json) { request =>
+    request.body.validate[Stock].fold({ errors =>
+      BadRequest(Json.obj(
+        "status" -> "Error",
+        "message" -> "Bad JSON"
+      ))
+    }, { stock =>
+      stockRepo.add(stock.product_id, stock.quantity)
+      Ok(Json.obj("status" -> "OK", "message" -> "Stock created"))
+    })
+  }
+
+  def updateJSON(id: Int): Action[JsValue] = Action(parse.json) {  request =>
+    request.body.validate[Stock].fold({ errors =>
+      BadRequest(Json.obj(
+        "status" -> "Error",
+        "message" -> "Bad JSON"
+      ))
+    }, { stock =>
+      stockRepo.update(id, stock)
+      Ok(Json.obj("status" -> "OK", "message" -> "Stock updated"))
+    })
+  }
+
+  def deleteJSON(id: Int): Action[JsValue] = Action(parse.json) {  request =>
+    stockRepo.delete(id)
+    Ok(Json.obj("status" -> "OK", "message" -> "Stock deleted"))
   }
 }
 
