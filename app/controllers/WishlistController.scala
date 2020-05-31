@@ -4,6 +4,7 @@ import javax.inject._
 import models.{Wishlist, WishlistRepository}
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -82,6 +83,51 @@ class WishlistController @Inject()(cc: MessagesControllerComponents, wishlistRep
         }
       }
     )
+  }
+
+  def listJSON: Action[AnyContent] = Action.async { implicit request =>
+    wishlistRepo.list().map(p =>
+      Ok(Json.toJson(p))
+    )
+  }
+
+  def detailsJSON(id: Int): Action[AnyContent] = Action.async { implicit request =>
+    wishlistRepo.details(id).map {
+      case Some(p) => Ok(Json.toJson(p))
+      case None => NotFound(Json.obj(
+        "status" -> "Error",
+        "message" -> "Not found"
+      ))
+    }
+  }
+
+  def addJSON(): Action[JsValue] = Action(parse.json) { request =>
+    request.body.validate[Wishlist].fold({ errors =>
+      BadRequest(Json.obj(
+        "status" -> "Error",
+        "message" -> "Bad JSON"
+      ))
+    }, { wishlist =>
+      wishlistRepo.add(wishlist.user_id, wishlist.product_id)
+      Ok(Json.obj("status" -> "OK", "message" -> "Wishlist created"))
+    })
+  }
+
+  def updateJSON(id: Int): Action[JsValue] = Action(parse.json) {  request =>
+    request.body.validate[Wishlist].fold({ errors =>
+      BadRequest(Json.obj(
+        "status" -> "Error",
+        "message" -> "Bad JSON"
+      ))
+    }, { wishlist =>
+      wishlistRepo.update(id, wishlist)
+      Ok(Json.obj("status" -> "OK", "message" -> "Wishlist updated"))
+    })
+  }
+
+  def deleteJSON(id: Int): Action[JsValue] = Action(parse.json) {  request =>
+    wishlistRepo.delete(id)
+    Ok(Json.obj("status" -> "OK", "message" -> "Wishlist deleted"))
   }
 }
 
