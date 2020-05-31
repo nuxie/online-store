@@ -47,6 +47,11 @@ GET         /users/update/:id                  controllers.UserController.update
 POST        /users/update                      controllers.UserController.updateHandle
 GET         /users/delete/:id                  controllers.UserController.delete(id: Int)
 
+GET         /api/invoices                      controllers.InvoiceController.listJSON()
+GET         /api/invoices/:id                  controllers.InvoiceController.detailsJSON(id: Int)
+POST        /api/invoices                      controllers.InvoiceController.createJSON()
+PUT         /api/invoices/:id                  controllers.InvoiceController.updateJSON(id: Int)
+DELETE      /api/invoices/:id                  controllers.InvoiceController.deleteJSON(id: Int)
 GET         /invoices/create                   controllers.InvoiceController.create
 POST        /invoices/createhandle             controllers.InvoiceController.createHandle
 GET         /invoices/all                      controllers.InvoiceController.list
