@@ -1,9 +1,10 @@
 package controllers
 
 import javax.inject._
-import models.{Review, ReviewRepository}
+import models.{Review, Review, ReviewRepository}
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -82,6 +83,51 @@ class ReviewController @Inject()(cc: MessagesControllerComponents, reviewRepo: R
         }
       }
     )
+  }
+
+  def listJSON: Action[AnyContent] = Action.async { implicit request =>
+    reviewRepo.list().map(p =>
+      Ok(Json.toJson(p))
+    )
+  }
+
+  def detailsJSON(id: Int): Action[AnyContent] = Action.async { implicit request =>
+    reviewRepo.details(id).map {
+      case Some(p) => Ok(Json.toJson(p))
+      case None => NotFound(Json.obj(
+        "status" -> "Error",
+        "message" -> "Not found"
+      ))
+    }
+  }
+
+  def createJSON(): Action[JsValue] = Action(parse.json) { request =>
+    request.body.validate[Review].fold({ errors =>
+      BadRequest(Json.obj(
+        "status" -> "Error",
+        "message" -> "Bad JSON"
+      ))
+    }, { review =>
+      reviewRepo.create(review.product_id, review.description)
+      Ok(Json.obj("status" -> "OK", "message" -> "Review created"))
+    })
+  }
+
+  def updateJSON(id: Int): Action[JsValue] = Action(parse.json) {  request =>
+    request.body.validate[Review].fold({ errors =>
+      BadRequest(Json.obj(
+        "status" -> "Error",
+        "message" -> "Bad JSON"
+      ))
+    }, { review =>
+      reviewRepo.update(id, review)
+      Ok(Json.obj("status" -> "OK", "message" -> "Review updated"))
+    })
+  }
+
+  def deleteJSON(id: Int): Action[JsValue] = Action(parse.json) {  request =>
+    reviewRepo.delete(id)
+    Ok(Json.obj("status" -> "OK", "message" -> "Review deleted"))
   }
 }
 
