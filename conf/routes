@@ -21,6 +21,11 @@ GET         /cart/update/:id                   controllers.CartController.update
 POST        /cart/update                       controllers.CartController.updateHandle
 GET         /cart/delete/:id                   controllers.CartController.delete(id: Int)
 
+GET         /api/categories                    controllers.CategoryController.listJSON()
+GET         /api/categories/:id                controllers.CategoryController.detailsJSON(id: Int)
+POST        /api/categories                    controllers.CategoryController.createJSON()
+PUT         /api/categories/:id                controllers.CategoryController.updateJSON(id: Int)
+DELETE      /api/categories/:id                controllers.CategoryController.deleteJSON(id: Int)
 GET         /categories/create                 controllers.CategoryController.create
 POST        /categories/createhandle           controllers.CategoryController.createHandle
 GET         /categories/all                    controllers.CategoryController.list
