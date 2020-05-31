@@ -138,6 +138,11 @@ GET         /stocks/update/:id                  controllers.StockController.upda
 POST        /stocks/update                      controllers.StockController.updateHandle
 GET         /stocks/delete/:id                  controllers.StockController.delete(id: Int)
 
+GET         /api/wishlists                      controllers.WishlistController.listJSON()
+GET         /api/wishlists/:id                  controllers.WishlistController.detailsJSON(id: Int)
+POST        /api/wishlists                      controllers.WishlistController.addJSON()
+PUT         /api/wishlists/:id                  controllers.WishlistController.updateJSON(id: Int)
+DELETE      /api/wishlists/:id                  controllers.WishlistController.deleteJSON(id: Int)
 GET         /wishlists/add                      controllers.WishlistController.add
 POST        /wishlists/addhandle                controllers.WishlistController.addHandle
 GET         /wishlists/all                      controllers.WishlistController.list
