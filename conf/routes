@@ -112,6 +112,11 @@ GET         /promotions/update/:id             controllers.PromotionController.u
 POST        /promotions/update                 controllers.PromotionController.updateHandle
 GET         /promotions/delete/:id             controllers.ProductController.delete(id: Int)
 
+GET         /api/reviews                       controllers.ReviewController.listJSON()
+GET         /api/reviews/:id                   controllers.ReviewController.detailsJSON(id: Int)
+POST        /api/reviews                       controllers.ReviewController.createJSON()
+PUT         /api/reviews/:id                   controllers.ReviewController.updateJSON(id: Int)
+DELETE      /api/reviews/:id                   controllers.ReviewController.deleteJSON(id: Int)
 GET         /reviews/create                    controllers.ReviewController.create
 POST        /reviews/createhandle              controllers.ReviewController.createHandle
 GET         /reviews/all                       controllers.ReviewController.list
