@@ -34,6 +34,11 @@ GET         /categories/update/:id             controllers.CategoryController.up
 POST        /categories/update                 controllers.CategoryController.updateHandle
 GET         /categories/delete/:id             controllers.CategoryController.delete(id: Int)
 
+GET         /api/users                         controllers.UserController.listJSON()
+GET         /api/users/:id                     controllers.UserController.detailsJSON(id: Int)
+POST        /api/users                         controllers.UserController.createJSON()
+PUT         /api/users/:id                     controllers.UserController.updateJSON(id: Int)
+DELETE      /api/users/:id                     controllers.UserController.deleteJSON(id: Int)
 GET         /users/create                      controllers.UserController.create
 POST        /users/createhandle                controllers.UserController.createHandle
 GET         /users/all                         controllers.UserController.list
