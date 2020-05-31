@@ -5,6 +5,7 @@ import models.{User, UserRepository}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
+import play.api.libs.json.{JsValue, Json}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -83,6 +84,51 @@ class UserController @Inject()(cc: MessagesControllerComponents, userRepo: UserR
         }
       }
     )
+  }
+
+  def listJSON: Action[AnyContent] = Action.async { implicit request =>
+    userRepo.list().map(p =>
+      Ok(Json.toJson(p))
+    )
+  }
+
+  def detailsJSON(id: Int): Action[AnyContent] = Action.async { implicit request =>
+    userRepo.details(id).map {
+      case Some(p) => Ok(Json.toJson(p))
+      case None => NotFound(Json.obj(
+        "status" -> "Error",
+        "message" -> "Not found"
+      ))
+    }
+  }
+
+  def createJSON(): Action[JsValue] = Action(parse.json) { request =>
+    request.body.validate[User].fold({ errors =>
+      BadRequest(Json.obj(
+        "status" -> "Error",
+        "message" -> "Bad JSON"
+      ))
+    }, { user =>
+      userRepo.create(user.name, user.e_mail, user.tax_number)
+      Ok(Json.obj("status" -> "OK", "message" -> "User created"))
+    })
+  }
+
+  def updateJSON(id: Int): Action[JsValue] = Action(parse.json) {  request =>
+    request.body.validate[User].fold({ errors =>
+      BadRequest(Json.obj(
+        "status" -> "Error",
+        "message" -> "Bad JSON"
+      ))
+    }, { user =>
+      userRepo.update(id, user)
+      Ok(Json.obj("status" -> "OK", "message" -> "User updated"))
+    })
+  }
+
+  def deleteJSON(id: Int): Action[JsValue] = Action(parse.json) {  request =>
+    userRepo.delete(id)
+    Ok(Json.obj("status" -> "OK", "message" -> "User deleted"))
   }
 }
 
