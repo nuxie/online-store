@@ -125,6 +125,11 @@ GET         /reviews/update/:id                controllers.ReviewController.upda
 POST        /reviews/update                    controllers.ReviewController.updateHandle
 GET         /reviews/delete/:id                controllers.ReviewController.delete(id: Int)
 
+GET         /api/stocks                         controllers.StockController.listJSON()
+GET         /api/stocks/:id                     controllers.StockController.detailsJSON(id: Int)
+POST        /api/stocks                         controllers.StockController.addJSON()
+PUT         /api/stocks/:id                     controllers.StockController.updateJSON(id: Int)
+DELETE      /api/stocks/:id                     controllers.StockController.deleteJSON(id: Int)
 GET         /stocks/add                         controllers.StockController.add
 POST        /stocks/addhandle                   controllers.StockController.addHandle
 GET         /stocks/all                         controllers.StockController.list
