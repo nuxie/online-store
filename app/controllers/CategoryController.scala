@@ -4,7 +4,9 @@ import javax.inject._
 import models.{Category, CategoryRepository}
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
+
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -79,6 +81,50 @@ class CategoryController @Inject()(cc: MessagesControllerComponents, categoryRep
         }
       }
     )
+  }
+  def listJSON: Action[AnyContent] = Action.async { implicit request =>
+      categoryRepo.list().map(p =>
+      Ok(Json.toJson(p))
+    )
+  }
+
+  def detailsJSON(id: Int): Action[AnyContent] = Action.async { implicit request =>
+    categoryRepo.details(id).map {
+      case Some(p) => Ok(Json.toJson(p))
+      case None => NotFound(Json.obj(
+        "status" -> "Error",
+        "message" -> "Not found"
+      ))
+    }
+  }
+
+  def createJSON(): Action[JsValue] = Action(parse.json) { request =>
+    request.body.validate[Category].fold({ errors =>
+      BadRequest(Json.obj(
+        "status" -> "Error",
+        "message" -> "Bad JSON"
+      ))
+    }, { category =>
+      categoryRepo.create(category.name)
+      Ok(Json.obj("status" -> "OK", "message" -> "Category created"))
+    })
+  }
+
+  def updateJSON(id: Int): Action[JsValue] = Action(parse.json) {  request =>
+    request.body.validate[Category].fold({ errors =>
+      BadRequest(Json.obj(
+        "status" -> "Error",
+        "message" -> "Bad JSON"
+      ))
+    }, { category =>
+      categoryRepo.update(id, category)
+      Ok(Json.obj("status" -> "OK", "message" -> "Category updated"))
+    })
+  }
+
+  def deleteJSON(id: Int): Action[JsValue] = Action(parse.json) {  request =>
+    categoryRepo.delete(id)
+    Ok(Json.obj("status" -> "OK", "message" -> "Category deleted"))
   }
 }
 
