@@ -60,6 +60,11 @@ GET         /invoices/update/:id               controllers.InvoiceController.upd
 POST        /invoices/update                   controllers.InvoiceController.updateHandle
 GET         /invoices/delete/:id               controllers.InvoiceController.delete(id: Int)
 
+GET         /api/orders                        controllers.OrderController.listJSON()
+GET         /api/orders/:id                    controllers.OrderController.detailsJSON(id: Int)
+POST        /api/orders                        controllers.OrderController.createJSON()
+PUT         /api/orders/:id                    controllers.OrderController.updateJSON(id: Int)
+DELETE      /api/orders/:id                    controllers.OrderController.deleteJSON(id: Int)
 GET         /orders/create                     controllers.OrderController.create
 POST        /orders/createhandle               controllers.OrderController.createHandle
 GET         /orders/all                        controllers.OrderController.list
