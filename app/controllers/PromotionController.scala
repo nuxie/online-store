@@ -106,7 +106,7 @@ class PromotionController @Inject()(cc: MessagesControllerComponents, promotionR
     }
   }
 
-  def createJSON(): Action[JsValue] = Action(parse.json) { request =>
+  def addJSON(): Action[JsValue] = Action(parse.json) { request =>
     request.body.validate[Promotion].fold({ errors =>
       BadRequest(Json.obj(
         "status" -> "Error",
