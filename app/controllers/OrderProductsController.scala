@@ -4,6 +4,7 @@ import javax.inject._
 import models.{OrderProducts, OrderProductsRepository}
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -85,6 +86,51 @@ class OrderProductsController @Inject()(cc: MessagesControllerComponents, orderP
         }
       }
     )
+  }
+
+  def listJSON: Action[AnyContent] = Action.async { implicit request =>
+    orderProductsRepo.list().map(p =>
+      Ok(Json.toJson(p))
+    )
+  }
+
+  def detailsJSON(id: Int): Action[AnyContent] = Action.async { implicit request =>
+    orderProductsRepo.details(id).map {
+      case Some(p) => Ok(Json.toJson(p))
+      case None => NotFound(Json.obj(
+        "status" -> "Error",
+        "message" -> "Not found"
+      ))
+    }
+  }
+
+  def addJSON(): Action[JsValue] = Action(parse.json) { request =>
+    request.body.validate[OrderProducts].fold({ errors =>
+      BadRequest(Json.obj(
+        "status" -> "Error",
+        "message" -> "Bad JSON"
+      ))
+    }, { op =>
+      orderProductsRepo.add(op.order_id, op.product_id, op.quantity)
+      Ok(Json.obj("status" -> "OK", "message" -> "Order product(s) added"))
+    })
+  }
+
+  def updateJSON(id: Int): Action[JsValue] = Action(parse.json) {  request =>
+    request.body.validate[OrderProducts].fold({ errors =>
+      BadRequest(Json.obj(
+        "status" -> "Error",
+        "message" -> "Bad JSON"
+      ))
+    }, { op =>
+      orderProductsRepo.update(id, op)
+      Ok(Json.obj("status" -> "OK", "message" -> "Order product(s) updated"))
+    })
+  }
+
+  def deleteJSON(id: Int): Action[JsValue] = Action(parse.json) {  request =>
+    orderProductsRepo.delete(id)
+    Ok(Json.obj("status" -> "OK", "message" -> "Order product(s) deleted"))
   }
 }
 
