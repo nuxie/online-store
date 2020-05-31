@@ -73,6 +73,11 @@ GET         /orders/update/:id                 controllers.OrderController.updat
 POST        /orders/update                     controllers.OrderController.updateHandle
 GET         /orders/delete/:id                 controllers.OrderController.delete(id: Int)
 
+GET         /api/order_products                controllers.OrderProductsController.listJSON()
+GET         /api/order_products/:id            controllers.OrderProductsController.detailsJSON(id: Int)
+POST        /api/order_products                controllers.OrderProductsController.addJSON()
+PUT         /api/order_products/:id            controllers.OrderProductsController.updateJSON(id: Int)
+DELETE      /api/order_products/:id            controllers.OrderProductsController.deleteJSON(id: Int)
 GET         /order_products/add                controllers.OrderProductsController.add
 POST        /order_products/addHandle          controllers.OrderProductsController.addHandle
 GET         /order_products/all                controllers.OrderProductsController.list
