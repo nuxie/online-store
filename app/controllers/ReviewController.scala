@@ -1,7 +1,7 @@
 package controllers
 
 import javax.inject._
-import models.{Review, Review, ReviewRepository}
+import models.{Review, ReviewRepository}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.json.{JsValue, Json}
