@@ -4,11 +4,18 @@
     <tr>
         <th id="id">ID</th>
         <th id="name">Name</th>
+        <th id="description">Description</th>
+        <th id="category_id">Category</th>
+        <th id="price">Price</th>
+        <th id="category_details">Category details</th>
     </tr>
     @for(product <- products) {
         <tr>
             <td>@product.id</td>
             <td>@product.name</td>
+            <td>@product.description</td>
+            <td>@product.category_id</td>
+            <td>@product.price</td>
         </tr>
     }
 </table>
