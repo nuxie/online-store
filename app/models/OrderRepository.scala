@@ -13,20 +13,19 @@ class OrderRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implic
   import dbConfig._
   import profile.api._
 
-  class OrderTable(tag: Tag) extends Table[Order](tag, "orders") {
-    def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
-    def user_id = column[Int]("user_id")
-
-    def * = (id, user_id) <> ((Order.apply _).tupled, Order.unapply)
+  class OrderTable(tag: Tag) extends Table[Order](tag, "ORDERS") {
+    def id = column[Int]("ID", O.PrimaryKey, O.AutoInc)
+    def userId = column[Int]("USER_ID")
+    def * = (id, userId) <> ((Order.apply _).tupled, Order.unapply)
   }
 
   val order = TableQuery[OrderTable]
 
-  def create(user_id: Int): Future[Order] = db.run {
-    (order.map(o => o.user_id)
+  def create(userId: Int): Future[Order] = db.run {
+    (order.map(o => o.userId)
       returning order.map(_.id)
-      into { case (user_id, id) => Order(id, user_id) }
-      ) += user_id
+      into { case (userId, id) => Order(id, userId) }
+      ) += userId
   }
 
   def list(): Future[Seq[Order]] = db.run {

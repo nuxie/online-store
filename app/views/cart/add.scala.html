@@ -6,8 +6,8 @@
 
 @form(routes.CartController.addHandle()) {
     @helper.CSRF.formField
-    @inputText(cart("user_id"))
-    @inputText(cart("product_id"))
+    @inputText(cart("userId"))
+    @inputText(cart("productId"))
     @inputText(cart("quantity"))
 
     <div class="buttons">

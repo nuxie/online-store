@@ -1,28 +1,26 @@
-import React, {useState} from 'react';
+import React from 'react';
 import './App.css';
 import 'materialize-css'; // It installs the JS asset only
 import 'materialize-css/dist/css/materialize.min.css';
-import * as products_all from "./tbl/Products";
-import * as products_all_not_logged from "./tbl/ProductsNotLogged";
-import ProductDetails from "./tbl/ProductDetails";
-import Cart from "./tbl/Cart";
-import {Register} from "./tbl/Register";
-import {Login} from "./tbl/Login";
-import {Fail} from "./tbl/Fail";
-import LoginRedirect from "./tbl/LoginRedirect";
-import Signout from "./tbl/Signout";
+import * as products_all from "./comps/Products";
+import * as products_all_not_logged from "./comps/ProductsNotLogged";
+import ProductDetails from "./comps/ProductDetails";
+import Cart from "./comps/Cart";
+import {Register} from "./comps/Register";
+import {Login} from "./comps/Login";
+import {Fail} from "./comps/Fail";
+import LoginRedirect from "./comps/LoginRedirect";
+import SignOut from "./comps/SignOut";
 import { withCookies, Cookies } from 'react-cookie';
 import { instanceOf } from 'prop-types';
-
+import {Payment} from "./comps/Payment";
+import PaymentSuccessful from "./comps/PaymentSuccessful";
 import {
     BrowserRouter as Router,
     Switch,
     Route,
     Link
 } from "react-router-dom";
-import {Payment} from "./tbl/Payment";
-import PaymentSuccessful from "./tbl/PaymentSuccessful";
-
 
 class App extends React.Component {
 
@@ -39,10 +37,8 @@ class App extends React.Component {
     }
 
     render(){
-        console.log("App render")
-        console.log(this.state.tkn)
         if(this.state.tkn !== undefined) {
-            console.log("NOT UNDEFINED")
+            console.log("YOU ARE LOGGED IN - token:")
             console.log(this.state.tkn)
             return (
                 <Router>
@@ -87,13 +83,13 @@ class App extends React.Component {
                                 <Fail />,
                             </Route>
                             <Route exact path="/auth/successful/:token" component={LoginRedirect} />
-                            <Route path="/signout" component={Signout} />,
+                            <Route path="/signout" component={SignOut} />,
                         </Switch>
                     </div>
                 </Router>
             )
         } else {
-            console.log("UNDEFINED")
+            console.log("YOU ARE NOT LOGGED IN - token undefined")
             console.log(this.state.tkn)
             return (
                 <Router>
@@ -133,7 +129,7 @@ class App extends React.Component {
                             </Route>
                             <Route exact path="/auth/successful/:token" component={LoginRedirect} />
                             <Route path="/signout">
-                                <Signout />,
+                                <SignOut />,
                             </Route>
                         </Switch>
                     </div>

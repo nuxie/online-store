@@ -26,8 +26,7 @@ class PaymentSuccessful extends React.Component {
             },
             method: "DELETE"
         };
-        fetch(`http://localhost:9000/api/cart/delete`, params)
-            .then(res => res.json())
+        fetch(`http://localhost:9000/api/cart/delete`, params).then(r => r)
     }
 
     render() {

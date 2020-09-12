@@ -3,7 +3,6 @@ package models
 import javax.inject.{Inject, Singleton}
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
-
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -13,21 +12,20 @@ class WishlistRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(imp
   import dbConfig._
   import profile.api._
 
-  class WishlistTable(tag: Tag) extends Table[Wishlist](tag, "wishlists") {
-    def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
-    def user_id = column[Int]("user_id")
-    def product_id = column[Int]("product_id")
-
-    def * = (id, user_id, product_id) <> ((Wishlist.apply _).tupled, Wishlist.unapply)
+  class WishlistTable(tag: Tag) extends Table[Wishlist](tag, "WISHLISTS") {
+    def id = column[Int]("ID", O.PrimaryKey, O.AutoInc)
+    def userId = column[Int]("USER_ID")
+    def productId = column[Int]("PRODUCT_ID")
+    def * = (id, userId, productId) <> ((Wishlist.apply _).tupled, Wishlist.unapply)
   }
 
   private val wishlist = TableQuery[WishlistTable]
 
-  def add(user_id: Int, product_id: Int): Future[Wishlist] = db.run {
-    (wishlist.map(w => (w.user_id, w.product_id))
+  def add(userId: Int, productId: Int): Future[Wishlist] = db.run {
+    (wishlist.map(w => (w.userId, w.productId))
       returning wishlist.map(_.id)
-      into { case ((user_id, product_id), id) => Wishlist(id, user_id, product_id) }
-      ) += (user_id, product_id)
+      into { case ((userId, productId), id) => Wishlist(id, userId, productId) }
+      ) += (userId, productId)
   }
 
   def list(): Future[Seq[Wishlist]] = db.run {

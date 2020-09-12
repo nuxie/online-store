@@ -13,16 +13,18 @@ import scala.concurrent.{ExecutionContext, Future}
 class ReviewController @Inject()(cc: MessagesControllerComponents, reviewRepo: ReviewRepository)
                                  (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
 
+  val redirect = "/reviews/all"
+
   val reviewForm: Form[CreateReviewForm] = Form {
     mapping(
-      "product_id" -> number,
+      "productId" -> number,
       "description" -> nonEmptyText
     )(CreateReviewForm.apply)(CreateReviewForm.unapply)
   }
   val updateReviewForm: Form[UpdateReviewForm] = Form {
     mapping(
       "id" -> number,
-      "product_id" -> number,
+      "productId" -> number,
       "description" -> nonEmptyText
     )(UpdateReviewForm.apply)(UpdateReviewForm.unapply)
   }
@@ -39,7 +41,7 @@ class ReviewController @Inject()(cc: MessagesControllerComponents, reviewRepo: R
         )
       },
       review => {
-        reviewRepo.create(review.product_id, review.description).map { _ =>
+        reviewRepo.create(review.productId, review.description).map { _ =>
           Redirect(routes.ReviewController.create()).flashing("success" -> "Review created")
         }
       }
@@ -54,19 +56,19 @@ class ReviewController @Inject()(cc: MessagesControllerComponents, reviewRepo: R
     val rev: Future[Option[Review]] = reviewRepo.details(id)
     rev.map {
       case Some(r) => Ok(views.html.review.details(r))
-      case None => Redirect("/reviews/all")
+      case None => Redirect(redirect)
     }
   }
 
   def delete(id: Int): Action[AnyContent] = Action {
     reviewRepo.delete(id)
-    Redirect("/reviews/all")
+    Redirect(redirect)
   }
 
   def update(id: Int): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
     reviewRepo.details(id).map {
-      case Some(r) => Ok(views.html.review.update(updateReviewForm.fill(UpdateReviewForm(r.id, r.product_id, r.description))))
-      case None => Redirect("/reviews/all")
+      case Some(r) => Ok(views.html.review.update(updateReviewForm.fill(UpdateReviewForm(r.id, r.productId, r.description))))
+      case None => Redirect(redirect)
     }
   }
 
@@ -78,7 +80,7 @@ class ReviewController @Inject()(cc: MessagesControllerComponents, reviewRepo: R
         )
       },
       review => {
-        reviewRepo.update(review.id, Review(review.id, review.product_id, review.description)).map { _ =>
+        reviewRepo.update(review.id, Review(review.id, review.productId, review.description)).map { _ =>
           Redirect(routes.ReviewController.update(review.id: Int)).flashing("success" -> "Review updated")
         }
       }
@@ -91,8 +93,8 @@ class ReviewController @Inject()(cc: MessagesControllerComponents, reviewRepo: R
     )
   }
 
-  def listProductJSON(product_id: Int): Action[AnyContent] = Action.async { implicit request =>
-    reviewRepo.listProduct(product_id).map(p =>
+  def listProductJSON(productId: Int): Action[AnyContent] = Action.async { implicit request =>
+    reviewRepo.listProduct(productId).map(p =>
       Ok(Json.toJson(p))
     )
   }
@@ -114,7 +116,7 @@ class ReviewController @Inject()(cc: MessagesControllerComponents, reviewRepo: R
         "message" -> "Bad JSON"
       ))
     }, { review =>
-      reviewRepo.create(review.product_id, review.description)
+      reviewRepo.create(review.productId, review.description)
       Ok(Json.obj("status" -> "OK", "message" -> "Review created"))
     })
   }
@@ -137,5 +139,5 @@ class ReviewController @Inject()(cc: MessagesControllerComponents, reviewRepo: R
   }
 }
 
-case class CreateReviewForm(product_id: Int, description: String)
-case class UpdateReviewForm(id: Int, product_id: Int, description: String)
+case class CreateReviewForm(productId: Int, description: String)
+case class UpdateReviewForm(id: Int, productId: Int, description: String)

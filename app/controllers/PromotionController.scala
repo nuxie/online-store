@@ -13,21 +13,23 @@ import scala.concurrent.{ExecutionContext, Future}
 class PromotionController @Inject()(cc: MessagesControllerComponents, promotionRepo: PromotionRepository)
                                  (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
 
+  val redirect = "/promotions/all"
+
   val promotionForm: Form[CreatePromotionForm] = Form {
     mapping(
       "name" -> nonEmptyText,
-      "flag_active" -> number,
-      "product_id" -> number,
-      "percentage_sale" -> number
+      "flagActive" -> number,
+      "productId" -> number,
+      "percentageSale" -> number
     )(CreatePromotionForm.apply)(CreatePromotionForm.unapply)
   }
   val updatePromotionForm: Form[UpdatePromotionForm] = Form {
     mapping(
       "id" -> number,
       "name" -> nonEmptyText,
-      "flag_active" -> number,
-      "product_id" -> number,
-      "percentage_sale" -> number
+      "flagActive" -> number,
+      "productId" -> number,
+      "percentageSale" -> number
     )(UpdatePromotionForm.apply)(UpdatePromotionForm.unapply)
   }
 
@@ -43,7 +45,7 @@ class PromotionController @Inject()(cc: MessagesControllerComponents, promotionR
         )
       },
       promotion => {
-        promotionRepo.add(promotion.name, promotion.flag_active, promotion.product_id, promotion.percentage_sale).map { _ =>
+        promotionRepo.add(promotion.name, promotion.flagActive, promotion.productId, promotion.percentageSale).map { _ =>
           Redirect(routes.PromotionController.create()).flashing("success" -> "Promotion created")
         }
       }
@@ -58,20 +60,20 @@ class PromotionController @Inject()(cc: MessagesControllerComponents, promotionR
     val promo: Future[Option[Promotion]] = promotionRepo.details(id)
     promo.map {
       case Some(p) => Ok(views.html.promotion.details(p))
-      case None => Redirect("/promotions/all")
+      case None => Redirect(redirect)
     }
   }
 
   def delete(id: Int): Action[AnyContent] = Action {
     promotionRepo.delete(id)
-    Redirect("/promotions/all")
+    Redirect(redirect)
   }
 
   def update(id: Int): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
     promotionRepo.details(id).map {
-      case Some(p) => Ok(views.html.promotion.update(updatePromotionForm.fill(UpdatePromotionForm(p.id, p.name, p.flag_active,
-        p.product_id, p.percentage_sale))))
-      case None => Redirect("/promotions/all")
+      case Some(p) => Ok(views.html.promotion.update(updatePromotionForm.fill(UpdatePromotionForm(p.id, p.name, p.flagActive,
+        p.productId, p.percentageSale))))
+      case None => Redirect(redirect)
     }
   }
 
@@ -83,7 +85,7 @@ class PromotionController @Inject()(cc: MessagesControllerComponents, promotionR
         )
       },
       promotion => {
-        promotionRepo.update(promotion.id, Promotion(promotion.id, promotion.name, promotion.flag_active, promotion.product_id, promotion.percentage_sale)).map { _ =>
+        promotionRepo.update(promotion.id, Promotion(promotion.id, promotion.name, promotion.flagActive, promotion.productId, promotion.percentageSale)).map { _ =>
           Redirect(routes.PromotionController.update(promotion.id: Int)).flashing("success" -> "Promotion updated")
         }
       }
@@ -113,7 +115,7 @@ class PromotionController @Inject()(cc: MessagesControllerComponents, promotionR
         "message" -> "Bad JSON"
       ))
     }, { promo =>
-      promotionRepo.add(promo.name, promo.flag_active, promo.product_id, promo.percentage_sale)
+      promotionRepo.add(promo.name, promo.flagActive, promo.productId, promo.percentageSale)
       Ok(Json.obj("status" -> "OK", "message" -> "Promotion created"))
     })
   }
@@ -136,5 +138,5 @@ class PromotionController @Inject()(cc: MessagesControllerComponents, promotionR
   }
 }
 
-case class CreatePromotionForm(name: String, flag_active: Int, product_id: Int, percentage_sale: Int)
-case class UpdatePromotionForm(id: Int, name: String, flag_active: Int, product_id: Int, percentage_sale: Int)
+case class CreatePromotionForm(name: String, flagActive: Int, productId: Int, percentageSale: Int)
+case class UpdatePromotionForm(id: Int, name: String, flagActive: Int, productId: Int, percentageSale: Int)

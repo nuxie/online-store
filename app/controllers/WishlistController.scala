@@ -13,17 +13,19 @@ import scala.concurrent.{ExecutionContext, Future}
 class WishlistController @Inject()(cc: MessagesControllerComponents, wishlistRepo: WishlistRepository)
                                (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
 
+  val redirect = "/wishlists/all"
+
   val wishlistForm: Form[CreateWishlistForm] = Form {
     mapping(
-      "user_id" -> number,
-      "product_id" -> number
+      "userId" -> number,
+      "productId" -> number
     )(CreateWishlistForm.apply)(CreateWishlistForm.unapply)
   }
   val updateWishlistForm: Form[UpdateWishlistForm] = Form {
     mapping(
       "id" -> number,
-      "user_id" -> number,
-      "product_id" -> number
+      "userId" -> number,
+      "productId" -> number
     )(UpdateWishlistForm.apply)(UpdateWishlistForm.unapply)
   }
 
@@ -39,7 +41,7 @@ class WishlistController @Inject()(cc: MessagesControllerComponents, wishlistRep
         )
       },
       wishlist => {
-        wishlistRepo.add(wishlist.user_id, wishlist.product_id).map { _ =>
+        wishlistRepo.add(wishlist.userId, wishlist.productId).map { _ =>
           Redirect(routes.WishlistController.add()).flashing("success" -> "Product(s) added to wishlist")
         }
       }
@@ -54,19 +56,19 @@ class WishlistController @Inject()(cc: MessagesControllerComponents, wishlistRep
     val cat: Future[Option[Wishlist]] = wishlistRepo.details(id)
     cat.map {
       case Some(w) => Ok(views.html.wishlist.details(w))
-      case None => Redirect("/wishlists/all")
+      case None => Redirect(redirect)
     }
   }
 
   def delete(id: Int): Action[AnyContent] = Action {
     wishlistRepo.delete(id)
-    Redirect("/wishlists/all")
+    Redirect(redirect)
   }
 
   def update(id: Int): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
     wishlistRepo.details(id).map {
-      case Some(w) => Ok(views.html.wishlist.update(updateWishlistForm.fill(UpdateWishlistForm(w.id, w.user_id, w.product_id))))
-      case None => Redirect("/wishlists/all")
+      case Some(w) => Ok(views.html.wishlist.update(updateWishlistForm.fill(UpdateWishlistForm(w.id, w.userId, w.productId))))
+      case None => Redirect(redirect)
     }
   }
 
@@ -78,7 +80,7 @@ class WishlistController @Inject()(cc: MessagesControllerComponents, wishlistRep
         )
       },
       wishlist => {
-        wishlistRepo.update(wishlist.id, Wishlist(wishlist.id, wishlist.user_id, wishlist.product_id)).map { _ =>
+        wishlistRepo.update(wishlist.id, Wishlist(wishlist.id, wishlist.userId, wishlist.productId)).map { _ =>
           Redirect(routes.WishlistController.update(wishlist.id: Int)).flashing("success" -> "Wishlist updated")
         }
       }
@@ -108,7 +110,7 @@ class WishlistController @Inject()(cc: MessagesControllerComponents, wishlistRep
         "message" -> "Bad JSON"
       ))
     }, { wishlist =>
-      wishlistRepo.add(wishlist.user_id, wishlist.product_id)
+      wishlistRepo.add(wishlist.userId, wishlist.productId)
       Ok(Json.obj("status" -> "OK", "message" -> "Wishlist created"))
     })
   }
@@ -131,5 +133,5 @@ class WishlistController @Inject()(cc: MessagesControllerComponents, wishlistRep
   }
 }
 
-case class CreateWishlistForm(user_id: Int, product_id: Int)
-case class UpdateWishlistForm(id: Int, user_id: Int, product_id: Int)
+case class CreateWishlistForm(userId: Int, productId: Int)
+case class UpdateWishlistForm(id: Int, userId: Int, productId: Int)

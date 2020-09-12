@@ -6,7 +6,7 @@
 
 @form(routes.ReviewController.createHandle()) {
     @helper.CSRF.formField
-    @inputText(review("product_id"))
+    @inputText(review("productId"))
     @inputText(review("description"))
 
     <div class="buttons">

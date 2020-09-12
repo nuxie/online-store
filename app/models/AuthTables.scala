@@ -1,8 +1,7 @@
 package models
-
 import slick.lifted.TableQuery
 
-trait AuthenticationsTables {
+trait AuthTables {
   val userTable = TableQuery[UserTable]
   val passwordInfoTable = TableQuery[PasswordInfoTable]
   val loginInfoTable = TableQuery[LoginInfoTable]

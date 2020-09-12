@@ -9,7 +9,7 @@ import models.UserIdentity
 import play.api.i18n.I18nSupport
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import play.api.mvc.{Cookie, InjectedController, MessagesAbstractController, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Cookie, InjectedController, MessagesAbstractController, MessagesControllerComponents}
 import services.UserService
 import silhouette.DefaultEnv
 
@@ -23,8 +23,8 @@ case class LoginController @Inject()(cc: MessagesControllerComponents,
                                (implicit ec: ExecutionContext)
   extends InjectedController with I18nSupport with AuthController[DefaultEnv] {
 
-  def submit() = silhouette.UnsecuredAction(parse.json).async { implicit request =>
-    implicit val signInRead = (
+  def submit(): Action[JsValue] = silhouette.UnsecuredAction(parse.json).async { implicit request =>
+    implicit val signInRead: Reads[SignInRequest] = (
       (__ \ "email").read[String] and
         (__ \ "password").read[String]
       ) (SignInRequest.apply _)
@@ -60,7 +60,6 @@ case class LoginController @Inject()(cc: MessagesControllerComponents,
                 )))
             } yield {
               silhouette.env.eventBus.publish(LoginEvent[UserIdentity](user, request))
-              // result.withCookies(Cookie("token_login_test", token, httpOnly = false))
               result
             }
           }
@@ -73,20 +72,16 @@ case class LoginController @Inject()(cc: MessagesControllerComponents,
     }
   }
 
-  def signOut = silhouette.SecuredAction.async { implicit request =>
+  def signOut: Action[AnyContent] = silhouette.SecuredAction.async { implicit request =>
     val result = Redirect(routes.HomeController.index())
     silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
     silhouette.env.authenticatorService.discard(request.authenticator, result)
   }
 
   case class SignInRequest(email: String, password: String)
-
   sealed trait AuthenticateResult
-
   case class Success(user: UserIdentity) extends AuthenticateResult
-
   object InvalidPassword extends AuthenticateResult
-
   object UserNotFound extends AuthenticateResult
 
 }

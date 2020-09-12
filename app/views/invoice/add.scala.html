@@ -6,8 +6,8 @@
 
 @form(routes.InvoiceController.createHandle()) {
     @helper.CSRF.formField
-    @inputText(invoice("order_id"))
-    @inputText(invoice("payment_due"))
+    @inputText(invoice("orderId"))
+    @inputText(invoice("paymentDue"))
 
     <div class="buttons">
         <input type="submit" value="Create invoice"/>

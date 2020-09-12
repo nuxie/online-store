@@ -1,16 +1,7 @@
 import React from 'react';
 import 'materialize-css/dist/css/materialize.min.css';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import $ from 'jquery';
-import M from "materialize-css";
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-} from "react-router-dom";
-import ProductRow from "./ProductRow";
 
+import ProductRowNotLogged from "./ProductRowNotLogged";
 
 export class ProductCategoryRow extends React.Component {
     render() {
@@ -24,12 +15,6 @@ export class ProductCategoryRow extends React.Component {
         );
     }
 }
-
-export class RedirectButton extends React.Component{
-    render() { return <Link to={this.props.to}><button className="btn btn-primary z-depth-2 hoverable">Details</button></Link>; }
-}
-
-
 
 export class ProductTable extends React.Component {
 
@@ -49,10 +34,10 @@ export class ProductTable extends React.Component {
             if (product.category.indexOf(filterCategory) === -1) {
                 return;
             }
-            if (inStockOnly && !(product.stock > 0)) {
+            if (inStockOnly && product.stock <= 0) {
                 return;
             }
-            if (saleOnly && !(product.promotion > 0)) {
+            if (saleOnly && product.promotion <= 0) {
                 return;
             }
             if (product.category !== lastCategory) {
@@ -63,7 +48,7 @@ export class ProductTable extends React.Component {
                 );
             }
             rows.push(
-                <ProductRow
+                <ProductRowNotLogged
                     product={product}
                     key={product.name}
                 />
@@ -72,7 +57,7 @@ export class ProductTable extends React.Component {
         });
 
         return (
-            <table class="centered">
+            <table className="centered">
                 <thead>
                 <tr>
                     <th>Name</th>
@@ -82,7 +67,7 @@ export class ProductTable extends React.Component {
                 </tr>
                 </thead>
                 <tbody>
-                    {rows}
+                {rows}
                 </tbody>
             </table>
         );
@@ -117,46 +102,40 @@ export class SearchBar extends React.Component {
     render() {
 
         return (
-            <body>
             <div className="container">
-            <form>
-                <input
-                    type="text"
-                    placeholder="Search products..."
-                    value={this.props.filterProduct}
-                    onChange={this.handleFilterProductChange}
-                />
-                <input
-                    type="text"
-                    placeholder="Search category..."
-                    value={this.props.filterCategory}
-                    onChange={this.handleFilterCategoryChange}
-                />
-                <p>
-                    <div className="switch">
-                    <label>
-                        <input type="checkbox"
-                               checked={this.props.inStockOnly}
-                               onChange={this.handleInStockChange}/>
-                        <span className="lever">''</span>
-                        In stock
-                    </label>
-                    </div>
-                </p>
-                <p>
-                    <div className="switch">
-                    <label>
-                        <input type="checkbox"
-                               checked={this.props.saleOnly}
-                               onChange={this.handleSaleChange}/>
-                        <span className="lever">''</span>
-                        On sale
-                    </label>
-                    </div>
-                </p>
-            </form>
+                <form>
+                    <input
+                        type="text"
+                        placeholder="Search products..."
+                        value={this.props.filterProduct}
+                        onChange={this.handleFilterProductChange}
+                    />
+                    <input
+                        type="text"
+                        placeholder="Search category..."
+                        value={this.props.filterCategory}
+                        onChange={this.handleFilterCategoryChange}
+                    />
+                        <div className="switch">
+                            <label>
+                                <input type="checkbox"
+                                       checked={this.props.inStockOnly}
+                                       onChange={this.handleInStockChange}/>
+                                <span className="lever">''</span>
+                                In stock
+                            </label>
+                        </div>
+                        <div className="switch">
+                            <label>
+                                <input type="checkbox"
+                                       checked={this.props.saleOnly}
+                                       onChange={this.handleSaleChange}/>
+                                <span className="lever">''</span>
+                                On sale
+                            </label>
+                        </div>
+                </form>
             </div>
-            </body>
         );
     }
 }
@@ -179,7 +158,7 @@ export class Products extends React.Component {
             .then(res => res.json())
             .then(
                 (result) => {
-                    result.sort((a, b) => a.category_id - b.category_id);
+                    result.sort((a, b) => a.categoryId - b.categoryId);
                     this.setState({
                         products: result,
                     });
@@ -218,29 +197,27 @@ export class Products extends React.Component {
 
     render() {
         return (
-            <body>
             <div className="container">
-            <div>
-                <SearchBar
-                    filterProduct={this.state.filterProduct}
-                    onFilterProductChange={this.handleFilterProductChange}
-                    filterCategory={this.state.filterCategory}
-                    onFilterCategoryChange={this.handleFilterCategoryChange}
-                    inStockOnly={this.state.inStockOnly}
-                    saleOnly={this.state.saleOnly}
-                    onInStockChange={this.handleInStockChange}
-                    onSaleChange={this.handleSaleChange}
-                />
-                <ProductTable
-                    products={this.state.products}
-                    filterProduct={this.state.filterProduct}
-                    filterCategory={this.state.filterCategory}
-                    inStockOnly={this.state.inStockOnly}
-                    saleOnly={this.state.saleOnly}
-                />
+                <div>
+                    <SearchBar
+                        filterProduct={this.state.filterProduct}
+                        onFilterProductChange={this.handleFilterProductChange}
+                        filterCategory={this.state.filterCategory}
+                        onFilterCategoryChange={this.handleFilterCategoryChange}
+                        inStockOnly={this.state.inStockOnly}
+                        saleOnly={this.state.saleOnly}
+                        onInStockChange={this.handleInStockChange}
+                        onSaleChange={this.handleSaleChange}
+                    />
+                    <ProductTable
+                        products={this.state.products}
+                        filterProduct={this.state.filterProduct}
+                        filterCategory={this.state.filterCategory}
+                        inStockOnly={this.state.inStockOnly}
+                        saleOnly={this.state.saleOnly}
+                    />
+                </div>
             </div>
-            </div>
-            </body>
         );
     }
 }

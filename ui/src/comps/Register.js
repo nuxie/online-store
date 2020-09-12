@@ -21,7 +21,6 @@ export function Register(props) {
     }
     const sendDetailsToServer = () => {
         if(state.email.length && state.password.length && state.firstName.length && state.lastName.length) {
-            console.log("hej")
             const params = {
                 headers: {
                     'Accept': "application/json, text/plain, */*",
@@ -40,9 +39,8 @@ export function Register(props) {
                     if(response.ok){
                         state.successMessage = 'Registration successful. Redirecting to home page...'
                         history.push('/');
-                        props.showError(null)
                     } else{
-                        props.showError("Some error ocurred");
+                        console.log("Some error ocurred");
                     }
                 })
                 .catch(function (error) {
@@ -53,10 +51,12 @@ export function Register(props) {
     }
 
     const handleSubmitClick = (e) => {
-        console.log("click")
         e.preventDefault();
         if(state.password === state.confirmPassword && state.password !== '' && state.email !== '' && state.firstName !== '' && state.lastName !== '') {
             sendDetailsToServer()
+        } else {
+            history.push('/failure');
+            console.log("error occured when trying to register");
         }
     }
     return(

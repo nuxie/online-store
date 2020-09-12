@@ -35,6 +35,7 @@ export function Login(props) {
                 .then(result => result.json())
                 .then(data => {
                     if(data.token !== undefined) {
+                        console.log("login successful")
                         console.log(data.token)
                         history.push('/auth/successful/' + data.token);
                     } else {

@@ -8,8 +8,8 @@
 
     @helper.CSRF.formField
     <input name="id" id="id" value="@order_products("id").value" type="hidden" />
-    @inputText(order_products("order_id"))
-    @inputText(order_products("product_id"))
+    @inputText(order_products("orderId"))
+    @inputText(order_products("productId"))
     @inputText(order_products("quantity"))
 
     <div class="buttons">

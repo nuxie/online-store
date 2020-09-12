@@ -6,8 +6,8 @@
 
 @form(routes.WishlistController.addHandle()) {
     @helper.CSRF.formField
-    @inputText(wishlist("user_id"))
-    @inputText(wishlist("product_id"))
+    @inputText(wishlist("userId"))
+    @inputText(wishlist("productId"))
 
     <div class="buttons">
         <input type="submit" value="Add wishlist"/>

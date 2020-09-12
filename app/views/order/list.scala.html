@@ -3,12 +3,12 @@
 <table aria-describedby="orders">
     <tr>
         <th id="id">ID</th>
-        <th id="user_id">User ID</th>
+        <th id="userId">User ID</th>
     </tr>
     @for(order <- orders) {
         <tr>
             <td>@order.id</td>
-            <td>@order.user_id</td>
+            <td>@order.userId</td>
         </tr>
     }
 </table>

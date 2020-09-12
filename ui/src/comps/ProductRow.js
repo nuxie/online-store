@@ -30,8 +30,8 @@ class ProductRow extends React.Component {
             },
             body: JSON.stringify({
                 id: 0, // it will get automatically incremented in the db
-                user_id: cookies.get('tkn', { path: '/' }), //fill this out when implementing logging in = ?
-                product_id: this.props.product.id,
+                userId: cookies.get('tkn', { path: '/' }), //fill this out when implementing logging in = ?
+                productId: this.props.product.id,
                 quantity: 1
             })
         })
@@ -48,7 +48,7 @@ class ProductRow extends React.Component {
                 </span>;
         const price = product.promotion > 0 ? <span style={{color: 'red'}}> {product.price - (product.price * product.promotion/100)} </span> : product.price;
         const cart_button = product.stock > 0 ?
-            <button onClick={this.handleCartClick} class="btn-floating btn-primary z-depth-2 hoverable pink">+</button> : '';
+            <button onClick={this.handleCartClick} className="btn-floating btn-primary z-depth-2 hoverable pink">+</button> : '';
 
         return (
             <tr>

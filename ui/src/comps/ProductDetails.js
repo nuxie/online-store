@@ -1,7 +1,5 @@
 import React from 'react';
 import 'materialize-css/dist/css/materialize.min.css';
-import $ from 'jquery';
-import M from "materialize-css";
 import {
     useParams
 } from "react-router-dom";
@@ -16,7 +14,6 @@ class ProductDetails extends React.Component {
     }
 
     componentDidMount() {
-        // this.global contex = ${this.props.params.token}
         fetch(`http://localhost:9000/api/products/${this.props.params.id}`)
             .then(res => res.json())
             .then(
@@ -39,12 +36,8 @@ class ProductDetails extends React.Component {
 
     render() {
         const rev = [];
-        console.log(this.state.product);
-        console.log(this.props.product);
-        console.log(this.state.reviews);
-        console.log(this.props.reviews);
         this.state.reviews.forEach((review) => {
-            rev.push(<div>{review.description}</div>);
+            rev.push(<div key={review.id}>{review.description}</div>);
         });
 
         return (

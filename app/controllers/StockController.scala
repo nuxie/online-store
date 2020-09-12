@@ -13,16 +13,18 @@ import scala.concurrent.{ExecutionContext, Future}
 class StockController @Inject()(cc: MessagesControllerComponents, stockRepo: StockRepository)
                                (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
 
+  val redirect = "/stocks/all"
+
   val stockForm: Form[CreateStockForm] = Form {
     mapping(
-      "product_id" -> number,
+      "productId" -> number,
       "quantity" -> number
     )(CreateStockForm.apply)(CreateStockForm.unapply)
   }
   val updateStockForm: Form[UpdateStockForm] = Form {
     mapping(
       "id" -> number,
-      "product_id" -> number,
+      "productId" -> number,
       "quantity" -> number
     )(UpdateStockForm.apply)(UpdateStockForm.unapply)
   }
@@ -39,7 +41,7 @@ class StockController @Inject()(cc: MessagesControllerComponents, stockRepo: Sto
         )
       },
       stock => {
-        stockRepo.add(stock.product_id, stock.quantity).map { _ =>
+        stockRepo.add(stock.productId, stock.quantity).map { _ =>
           Redirect(routes.StockController.add()).flashing("success" -> "Stock added")
         }
       }
@@ -54,19 +56,19 @@ class StockController @Inject()(cc: MessagesControllerComponents, stockRepo: Sto
     val st: Future[Option[Stock]] = stockRepo.details(id)
     st.map {
       case Some(s) => Ok(views.html.stock.details(s))
-      case None => Redirect("/stocks/all")
+      case None => Redirect(redirect)
     }
   }
 
   def delete(id: Int): Action[AnyContent] = Action {
     stockRepo.delete(id)
-    Redirect("/stocks/all")
+    Redirect(redirect)
   }
 
   def update(id: Int): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
     stockRepo.details(id).map {
-      case Some(s) => Ok(views.html.stock.update(updateStockForm.fill(UpdateStockForm(s.id, s.product_id, s.quantity))))
-      case None => Redirect("/stocks/all")
+      case Some(s) => Ok(views.html.stock.update(updateStockForm.fill(UpdateStockForm(s.id, s.productId, s.quantity))))
+      case None => Redirect(redirect)
     }
   }
 
@@ -78,7 +80,7 @@ class StockController @Inject()(cc: MessagesControllerComponents, stockRepo: Sto
         )
       },
       stock => {
-        stockRepo.update(stock.id, Stock(stock.id, stock.product_id, stock.quantity)).map { _ =>
+        stockRepo.update(stock.id, Stock(stock.id, stock.productId, stock.quantity)).map { _ =>
           Redirect(routes.StockController.update(stock.id: Int)).flashing("success" -> "Stock updated")
         }
       }
@@ -108,7 +110,7 @@ class StockController @Inject()(cc: MessagesControllerComponents, stockRepo: Sto
         "message" -> "Bad JSON"
       ))
     }, { stock =>
-      stockRepo.add(stock.product_id, stock.quantity)
+      stockRepo.add(stock.productId, stock.quantity)
       Ok(Json.obj("status" -> "OK", "message" -> "Stock created"))
     })
   }
@@ -131,5 +133,5 @@ class StockController @Inject()(cc: MessagesControllerComponents, stockRepo: Sto
   }
 }
 
-case class CreateStockForm(product_id: Int, quantity: Int)
-case class UpdateStockForm(id: Int, product_id: Int, quantity: Int)
+case class CreateStockForm(productId: Int, quantity: Int)
+case class UpdateStockForm(id: Int, productId: Int, quantity: Int)

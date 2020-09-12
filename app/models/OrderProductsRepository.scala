@@ -13,22 +13,22 @@ class OrderProductsRepository @Inject()(dbConfigProvider: DatabaseConfigProvider
   import dbConfig._
   import profile.api._
 
-  class OrderProductsTable(tag: Tag) extends Table[OrderProducts](tag, "orders_products") {
-    def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
-    def order_id = column[Int]("order_id")
-    def product_id = column[Int]("product_id")
-    def quantity = column[Int]("quantity")
+  class OrderProductsTable(tag: Tag) extends Table[OrderProducts](tag, "ORDERS_PRODUCTS") {
+    def id = column[Int]("ID", O.PrimaryKey, O.AutoInc)
+    def orderId = column[Int]("ORDER_ID")
+    def productId = column[Int]("PRODUCT_ID")
+    def quantity = column[Int]("QUANTITY")
 
-    def * = (id, order_id, product_id, quantity) <> ((OrderProducts.apply _).tupled, OrderProducts.unapply)
+    def * = (id, orderId, productId, quantity) <> ((OrderProducts.apply _).tupled, OrderProducts.unapply)
   }
 
   private val orderProducts = TableQuery[OrderProductsTable]
 
-  def add(order_id: Int, product_id: Int, quantity: Int): Future[OrderProducts] = db.run {
-    (orderProducts.map(op => (op.order_id, op.product_id, op.quantity))
+  def add(orderId: Int, productId: Int, quantity: Int): Future[OrderProducts] = db.run {
+    (orderProducts.map(op => (op.orderId, op.productId, op.quantity))
       returning orderProducts.map(_.id)
-      into { case ((order_id, product_id, quantity), id) => OrderProducts(id, order_id, product_id, quantity) }
-      )  += (order_id, product_id, quantity)
+      into { case ((orderId, productId, quantity), id) => OrderProducts(id, orderId, productId, quantity) }
+      )  += (orderId, productId, quantity)
   }
 
   def list(): Future[Seq[OrderProducts]] = db.run {

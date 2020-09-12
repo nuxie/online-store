@@ -9,9 +9,9 @@
     @helper.CSRF.formField
     <input name="id" id="id" value="@promotion("id").value" type="hidden" />
     @inputText(promotion("name"))
-    @inputText(promotion("flag_active"))
-    @inputText(promotion("product_id"))
-    @inputText(promotion("percentage_sale"))
+    @inputText(promotion("flagActive"))
+    @inputText(promotion("productId"))
+    @inputText(promotion("percentageSale"))
 
     <div class="buttons">
         <input type="submit" value="Update promotion"/>

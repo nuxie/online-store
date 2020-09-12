@@ -6,7 +6,7 @@
 
 @form(routes.OrderController.createHandle()) {
     @helper.CSRF.formField
-    @inputText(order("user_id"))
+    @inputText(order("userId"))
 
     <div class="buttons">
         <input type="submit" value="Create order"/>

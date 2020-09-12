@@ -9,9 +9,12 @@ import play.api.mvc._
 
 import scala.concurrent.{ExecutionContext, Future}
 
+
 @Singleton
 class CategoryController @Inject()(cc: MessagesControllerComponents, categoryRepo: CategoryRepository)
                                   (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
+
+  val redirect = "/categories/all"
 
   val categoryForm: Form[CreateCategoryForm] = Form {
     mapping(
@@ -52,19 +55,19 @@ class CategoryController @Inject()(cc: MessagesControllerComponents, categoryRep
     val cat: Future[Option[Category]] = categoryRepo.details(id)
     cat.map {
       case Some(c) => Ok(views.html.category.details(c))
-      case None => Redirect("/categories/all")
+      case None => Redirect(redirect)
     }
   }
 
   def delete(id: Int): Action[AnyContent] = Action {
     categoryRepo.delete(id)
-    Redirect("/categories/all")
+    Redirect(redirect)
   }
 
   def update(id: Int): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
     categoryRepo.details(id).map {
         case Some(c) => Ok(views.html.category.update(updateCategoryForm.fill(UpdateCategoryForm(c.id, c.name))))
-        case None => Redirect("/categories/all")
+        case None => Redirect(redirect)
     }
   }
 

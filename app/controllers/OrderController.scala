@@ -13,15 +13,17 @@ import scala.concurrent.{ExecutionContext, Future}
 class OrderController @Inject()(cc: MessagesControllerComponents, orderRepo: OrderRepository)
                                  (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
 
+  val redirect = "/orders/all"
+
   val orderForm: Form[CreateOrderForm] = Form {
     mapping(
-      "user_id" -> number
+      "userId" -> number
     )(CreateOrderForm.apply)(CreateOrderForm.unapply)
   }
   val updateOrderForm: Form[UpdateOrderForm] = Form {
     mapping(
       "id" -> number,
-      "user_id" -> number
+      "userId" -> number
     )(UpdateOrderForm.apply)(UpdateOrderForm.unapply)
   }
 
@@ -37,7 +39,7 @@ class OrderController @Inject()(cc: MessagesControllerComponents, orderRepo: Ord
         )
       },
       order => {
-        orderRepo.create(order.user_id).map { _ =>
+        orderRepo.create(order.userId).map { _ =>
           Redirect(routes.OrderController.create()).flashing("success" -> "Order created")
         }
       }
@@ -52,19 +54,19 @@ class OrderController @Inject()(cc: MessagesControllerComponents, orderRepo: Ord
     val ord: Future[Option[Order]] = orderRepo.details(id)
     ord.map {
       case Some(o) => Ok(views.html.order.details(o))
-      case None => Redirect("/orders/all")
+      case None => Redirect(redirect)
     }
   }
 
   def delete(id: Int): Action[AnyContent] = Action {
     orderRepo.delete(id)
-    Redirect("/orders/all")
+    Redirect(redirect)
   }
 
   def update(id: Int): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
     orderRepo.details(id).map {
-      case Some(i) => Ok(views.html.order.update(updateOrderForm.fill(UpdateOrderForm(i.id, i.user_id))))
-      case None => Redirect("/orders/all")
+      case Some(i) => Ok(views.html.order.update(updateOrderForm.fill(UpdateOrderForm(i.id, i.userId))))
+      case None => Redirect(redirect)
     }
   }
 
@@ -76,7 +78,7 @@ class OrderController @Inject()(cc: MessagesControllerComponents, orderRepo: Ord
         )
       },
       order => {
-        orderRepo.update(order.id, Order(order.id, order.user_id)).map { _ =>
+        orderRepo.update(order.id, Order(order.id, order.userId)).map { _ =>
           Redirect(routes.OrderController.update(order.id: Int)).flashing("success" -> "Order updated")
         }
       }
@@ -106,7 +108,7 @@ class OrderController @Inject()(cc: MessagesControllerComponents, orderRepo: Ord
         "message" -> "Bad JSON"
       ))
     }, { order =>
-      orderRepo.create(order.user_id)
+      orderRepo.create(order.userId)
       Ok(Json.obj("status" -> "OK", "message" -> "Order created"))
     })
   }
@@ -129,5 +131,5 @@ class OrderController @Inject()(cc: MessagesControllerComponents, orderRepo: Ord
   }
 }
 
-case class CreateOrderForm(user_id: Int)
-case class UpdateOrderForm(id: Int, user_id: Int)
+case class CreateOrderForm(userId: Int)
+case class UpdateOrderForm(id: Int, userId: Int)

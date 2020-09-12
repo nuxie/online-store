@@ -13,17 +13,19 @@ import scala.concurrent.{ExecutionContext, Future}
 class InvoiceController @Inject()(cc: MessagesControllerComponents, invoiceRepo: InvoiceRepository)
                               (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
 
+  val redirect = "/invoices/all"
+
   val invoiceForm: Form[CreateInvoiceForm] = Form {
     mapping(
-      "order_id" -> number,
-      "payment_due" -> nonEmptyText
+      "orderId" -> number,
+      "paymentDue" -> nonEmptyText
     )(CreateInvoiceForm.apply)(CreateInvoiceForm.unapply)
   }
   val updateInvoiceForm: Form[UpdateInvoiceForm] = Form {
     mapping(
       "id" -> number,
-      "order_id" -> number,
-      "payment_due" -> nonEmptyText
+      "orderId" -> number,
+      "paymentDue" -> nonEmptyText
     )(UpdateInvoiceForm.apply)(UpdateInvoiceForm.unapply)
   }
 
@@ -39,7 +41,7 @@ class InvoiceController @Inject()(cc: MessagesControllerComponents, invoiceRepo:
         )
       },
       invoice => {
-        invoiceRepo.create(invoice.order_id, invoice.payment_due).map { _ =>
+        invoiceRepo.create(invoice.orderId, invoice.paymentDue).map { _ =>
           Redirect(routes.InvoiceController.create()).flashing("success" -> "Invoice created")
         }
       }
@@ -54,19 +56,19 @@ class InvoiceController @Inject()(cc: MessagesControllerComponents, invoiceRepo:
     val inv: Future[Option[Invoice]] = invoiceRepo.details(id)
     inv.map {
       case Some(i) => Ok(views.html.invoice.details(i))
-      case None => Redirect("/invoices/all")
+      case None => Redirect(redirect)
     }
   }
 
   def delete(id: Int): Action[AnyContent] = Action {
     invoiceRepo.delete(id)
-    Redirect("/invoices/all")
+    Redirect(redirect)
   }
 
   def update(id: Int): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
     invoiceRepo.details(id).map {
-      case Some(i) => Ok(views.html.invoice.update(updateInvoiceForm.fill(UpdateInvoiceForm(i.id, i.order_id, i.payment_due))))
-      case None => Redirect("/invoices/all")
+      case Some(i) => Ok(views.html.invoice.update(updateInvoiceForm.fill(UpdateInvoiceForm(i.id, i.orderId, i.paymentDue))))
+      case None => Redirect(redirect)
     }
   }
 
@@ -78,7 +80,7 @@ class InvoiceController @Inject()(cc: MessagesControllerComponents, invoiceRepo:
         )
       },
       invoice => {
-        invoiceRepo.update(invoice.id, Invoice(invoice.id, invoice.order_id, invoice.payment_due)).map { _ =>
+        invoiceRepo.update(invoice.id, Invoice(invoice.id, invoice.orderId, invoice.paymentDue)).map { _ =>
           Redirect(routes.InvoiceController.update(invoice.id: Int)).flashing("success" -> "Invoice updated")
         }
       }
@@ -108,7 +110,7 @@ class InvoiceController @Inject()(cc: MessagesControllerComponents, invoiceRepo:
         "message" -> "Bad JSON"
       ))
     }, { invoice =>
-      invoiceRepo.create(invoice.order_id, invoice.payment_due)
+      invoiceRepo.create(invoice.orderId, invoice.paymentDue)
       Ok(Json.obj("status" -> "OK", "message" -> "Invoice created"))
     })
   }
@@ -131,5 +133,5 @@ class InvoiceController @Inject()(cc: MessagesControllerComponents, invoiceRepo:
   }
 }
 
-case class CreateInvoiceForm(order_id: Int, payment_due: String)
-case class UpdateInvoiceForm(id: Int, order_id: Int, payment_due: String)
+case class CreateInvoiceForm(orderId: Int, paymentDue: String)
+case class UpdateInvoiceForm(id: Int, orderId: Int, paymentDue: String)

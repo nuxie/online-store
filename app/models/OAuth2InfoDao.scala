@@ -6,7 +6,6 @@ import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.impl.providers.OAuth2Info
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import javax.inject.Inject
-import models.{AuthenticationsTables, OAuth2InfoDb}
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
 
@@ -15,14 +14,12 @@ import scala.reflect.ClassTag
 
 class OAuth2InfoDao @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
                              (implicit ec: ExecutionContext, val classTag: ClassTag[OAuth2Info])
-  extends DelegableAuthInfoDAO[OAuth2Info] with AuthenticationsTables {
+  extends DelegableAuthInfoDAO[OAuth2Info] with AuthTables {
 
   val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
   import profile.api._
-
-  override def find(loginInfo: LoginInfo): Future[Option[OAuth2Info]] = ???
 
   override def add(loginInfo: LoginInfo, authInfo: OAuth2Info): Future[OAuth2Info] = {
     val foundLoginInfo = loginInfoTable.filter(dbLoginInfo => dbLoginInfo.providerId === loginInfo.providerID &&
@@ -43,13 +40,11 @@ class OAuth2InfoDao @Inject()(protected val dbConfigProvider: DatabaseConfigProv
         }
       }
     }.transactionally
-
     db.run(action).map(_ => authInfo)
   }
 
   override def update(loginInfo: LoginInfo, authInfo: OAuth2Info): Future[OAuth2Info] = ???
-
   override def save(loginInfo: LoginInfo, authInfo: OAuth2Info): Future[OAuth2Info] = ???
-
   override def remove(loginInfo: LoginInfo): Future[Unit] = ???
+  override def find(loginInfo: LoginInfo): Future[Option[OAuth2Info]] = ???
 }

@@ -3,15 +3,15 @@
 <table aria-describedby="orders_products">
     <tr>
         <th id="id">ID</th>
-        <th id="order_id">Order ID</th>
-        <th id="product_id">Product ID</th>
+        <th id="orderId">Order ID</th>
+        <th id="productId">Product ID</th>
         <th id="quantity">Quantity</th>
     </tr>
     @for(order_products <- orders_products) {
         <tr>
             <td>@order_products.id</td>
-            <td>@order_products.order_id</td>
-            <td>@order_products.product_id</td>
+            <td>@order_products.orderId</td>
+            <td>@order_products.productId</td>
             <td>@order_products.quantity</td>
         </tr>
     }

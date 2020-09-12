@@ -3,14 +3,14 @@ package controllers
 import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
 import com.mohiva.play.silhouette.api.util.PasswordHasherRegistry
 import com.mohiva.play.silhouette.api.{LoginEvent, LoginInfo, SignUpEvent, Silhouette}
-import com.mohiva.play.silhouette.impl.providers.{CredentialsProvider, SocialProviderRegistry}
+import com.mohiva.play.silhouette.impl.providers.CredentialsProvider
 import models.LoginInfoDao
 import javax.inject.{Inject, Singleton}
 import models.UserIdentity
 import play.api.i18n.I18nSupport
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import play.api.mvc.{MessagesAbstractController, MessagesControllerComponents}
+import play.api.mvc.{Action, MessagesAbstractController, MessagesControllerComponents}
 import services.UserService
 import silhouette.DefaultEnv
 
@@ -27,14 +27,12 @@ class RegisterController @Inject()(cc: MessagesControllerComponents,
   extends MessagesAbstractController(cc)
     with I18nSupport {
 
-  val emptyStringMsg = "cannot be empty"
-
-  def submit() = silhouette.UnsecuredAction(parse.json).async { implicit request =>
-    implicit val signUpRead = (
-      (JsPath \ "email").read[String].filter(JsonValidationError(emptyStringMsg))(x => x != null && !x.isEmpty) and
-        (JsPath \ "firstName").read[String].filter(JsonValidationError(emptyStringMsg))(x => x != null && !x.isEmpty) and
-        (JsPath \ "lastName").read[String].filter(JsonValidationError(emptyStringMsg))(x => x != null && !x.isEmpty) and
-        (JsPath \ "password").read[String].filter(JsonValidationError(emptyStringMsg))(x => x != null && !x.isEmpty)
+  def submit(): Action[JsValue] = silhouette.UnsecuredAction(parse.json).async { implicit request =>
+    implicit val signUpRead: Reads[SignUpRequest] = (
+      (__ \ "email").read[String] and
+        (__ \ "firstName").read[String] and
+        (__ \ "lastName").read[String] and
+        (__ \ "password").read[String]
       ) (SignUpRequest.apply _)
 
     val validation = request.body.validate[SignUpRequest](signUpRead)

@@ -6,7 +6,7 @@
 
 @form(routes.StockController.addHandle()) {
     @helper.CSRF.formField
-    @inputText(stock("product_id"))
+    @inputText(stock("productId"))
     @inputText(stock("quantity"))
 
     <div class="buttons">

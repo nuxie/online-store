@@ -13,18 +13,20 @@ import scala.concurrent.{ExecutionContext, Future}
 class OrderProductsController @Inject()(cc: MessagesControllerComponents, orderProductsRepo: OrderProductsRepository)
                                (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
 
+  val redirect = "/order_products/all"
+
   val orderProductsForm: Form[CreateOrderProductsForm] = Form {
     mapping(
-      "order_id" -> number,
-      "product_id" -> number,
+      "orderId" -> number,
+      "productId" -> number,
       "quantity" -> number
     )(CreateOrderProductsForm.apply)(CreateOrderProductsForm.unapply)
   }
   val updateOrderProductsForm: Form[UpdateOrderProductsForm] = Form {
     mapping(
       "id" -> number,
-      "order_id" -> number,
-      "product_id" -> number,
+      "orderId" -> number,
+      "productId" -> number,
       "quantity" -> number
     )(UpdateOrderProductsForm.apply)(UpdateOrderProductsForm.unapply)
   }
@@ -41,7 +43,7 @@ class OrderProductsController @Inject()(cc: MessagesControllerComponents, orderP
         )
       },
       orderProd => {
-        orderProductsRepo.add(orderProd.order_id, orderProd.product_id, orderProd.quantity).map { _ =>
+        orderProductsRepo.add(orderProd.orderId, orderProd.productId, orderProd.quantity).map { _ =>
           Redirect(routes.OrderProductsController.add()).flashing("success" -> "Order product(s) added")
         }
       }
@@ -53,23 +55,23 @@ class OrderProductsController @Inject()(cc: MessagesControllerComponents, orderP
   }
 
   def details(id: Int): Action[AnyContent] = Action.async { implicit request =>
-    val or_prod: Future[Option[OrderProducts]] = orderProductsRepo.details(id)
-    or_prod.map {
+    val orderProd: Future[Option[OrderProducts]] = orderProductsRepo.details(id)
+    orderProd.map {
       case Some(op) => Ok(views.html.order_products.details(op))
-      case None => Redirect("/order_products/all")
+      case None => Redirect(redirect)
     }
   }
 
   def delete(id: Int): Action[AnyContent] = Action {
     orderProductsRepo.delete(id)
-    Redirect("/order_products/all")
+    Redirect(redirect)
   }
 
   def update(id: Int): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
     orderProductsRepo.details(id).map {
       case Some(op) => Ok(views.html.order_products.update(updateOrderProductsForm.fill(UpdateOrderProductsForm(op.id,
-                                                                      op.order_id, op.product_id, op.quantity))))
-      case None => Redirect("/order_products/all")
+                                                                      op.orderId, op.productId, op.quantity))))
+      case None => Redirect(redirect)
     }
   }
 
@@ -81,7 +83,7 @@ class OrderProductsController @Inject()(cc: MessagesControllerComponents, orderP
         )
       },
       orderProd => {
-        orderProductsRepo.update(orderProd.id, OrderProducts(orderProd.id, orderProd.order_id, orderProd.product_id, orderProd.quantity)).map { _ =>
+        orderProductsRepo.update(orderProd.id, OrderProducts(orderProd.id, orderProd.orderId, orderProd.productId, orderProd.quantity)).map { _ =>
           Redirect(routes.OrderProductsController.update(orderProd.id: Int)).flashing("success" -> "Order updated")
         }
       }
@@ -111,7 +113,7 @@ class OrderProductsController @Inject()(cc: MessagesControllerComponents, orderP
         "message" -> "Bad JSON"
       ))
     }, { op =>
-      orderProductsRepo.add(op.order_id, op.product_id, op.quantity)
+      orderProductsRepo.add(op.orderId, op.productId, op.quantity)
       Ok(Json.obj("status" -> "OK", "message" -> "Order product(s) added"))
     })
   }
@@ -134,5 +136,5 @@ class OrderProductsController @Inject()(cc: MessagesControllerComponents, orderP
   }
 }
 
-case class CreateOrderProductsForm(order_id: Int, product_id: Int, quantity: Int)
-case class UpdateOrderProductsForm(id: Int, order_id: Int, product_id: Int, quantity: Int)
+case class CreateOrderProductsForm(orderId: Int, productId: Int, quantity: Int)
+case class UpdateOrderProductsForm(id: Int, orderId: Int, productId: Int, quantity: Int)

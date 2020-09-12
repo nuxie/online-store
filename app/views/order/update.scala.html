@@ -8,7 +8,7 @@
 
     @helper.CSRF.formField
     <input name="id" id="id" value="@order("id").value" type="hidden" />
-    @inputText(order("user_id"))
+    @inputText(order("userId"))
 
     <div class="buttons">
         <input type="submit" value="Update order"/>

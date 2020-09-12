@@ -10,7 +10,7 @@ import javax.inject.Inject
 import models.UserIdentity
 import play.api.Configuration
 import play.api.libs.json.Json
-import play.api.mvc.{Cookie, MessagesAbstractController, MessagesControllerComponents}
+import play.api.mvc.{Action, AnyContent, Cookie, MessagesAbstractController, MessagesControllerComponents}
 import services.UserService
 import silhouette.DefaultEnv
 
@@ -27,7 +27,7 @@ class SocialProviderController @Inject()(cc: MessagesControllerComponents,
                                         (implicit ex: ExecutionContext)
   extends MessagesAbstractController(cc) {
 
-  def authenticate(provider: String) = Action.async { implicit request =>
+  def authenticate(provider: String): Action[AnyContent] = Action.async { implicit request =>
     (socialProviderRegistry.get[SocialProvider](provider) match {
       case Some(p: SocialProvider with CommonSocialProfileBuilder) => {
         p.authenticate().flatMap {
@@ -48,7 +48,6 @@ class SocialProviderController @Inject()(cc: MessagesControllerComponents,
                       token, Redirect(s"http://localhost:3000/auth/successful/$token"))
                   } yield {
                     silhouette.env.eventBus.publish(LoginEvent(user, request))
-                    // result.withCookies(Cookie("token_sp_test", token, httpOnly = false))
                     result
                   }
                 } else {

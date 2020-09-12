@@ -3,12 +3,12 @@
 <table aria-describedby="wishlists">
     <tr>
         <th id="id">Wishlist ID</th>
-        <th id="user_id">User ID</th>
+        <th id="userId">User ID</th>
     </tr>
     @for(wishlist <- wishlists) {
         <tr>
             <td>@wishlist.id</td>
-            <td>@wishlist.user_id</td>
+            <td>@wishlist.userId</td>
         </tr>
     }
 </table>

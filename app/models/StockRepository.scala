@@ -13,21 +13,20 @@ class StockRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implic
   import dbConfig._
   import profile.api._
 
-  class StockTable(tag: Tag) extends Table[Stock](tag, "stock") {
-    def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
-    def product_id = column[Int]("product_id")
-    def quantity = column[Int]("quantity")
-
-    def * = (id, product_id, quantity) <> ((Stock.apply _).tupled, Stock.unapply)
+  class StockTable(tag: Tag) extends Table[Stock](tag, "STOCK") {
+    def id = column[Int]("ID", O.PrimaryKey, O.AutoInc)
+    def productId = column[Int]("PRODUCT_ID")
+    def quantity = column[Int]("QUANTITY")
+    def * = (id, productId, quantity) <> ((Stock.apply _).tupled, Stock.unapply)
   }
 
   private val stock = TableQuery[StockTable]
 
-  def add(product_id: Int, quantity: Int): Future[Stock] = db.run {
-    (stock.map(s => (s.product_id, s.quantity))
+  def add(productId: Int, quantity: Int): Future[Stock] = db.run {
+    (stock.map(s => (s.productId, s.quantity))
       returning stock.map(_.id)
-      into { case ((product_id, quantity), id) => Stock(id, product_id, quantity) }
-      ) += (product_id, quantity)
+      into { case ((productId, quantity), id) => Stock(id, productId, quantity) }
+      ) += (productId, quantity)
   }
 
   def list(): Future[Seq[Stock]] = db.run {
@@ -35,7 +34,7 @@ class StockRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implic
   }
 
   def details(id: Int): Future[Option[Stock]] = db.run { //getById - in this case productID
-    stock.filter(_.product_id === id).result.headOption
+    stock.filter(_.productId === id).result.headOption
   }
 
   def delete(id: Int): Future[Unit] = db.run {

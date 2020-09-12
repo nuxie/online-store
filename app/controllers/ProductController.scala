@@ -13,11 +13,13 @@ import scala.concurrent.{ExecutionContext, Future}
 class ProductController @Inject()(cc: MessagesControllerComponents, productRepo: ProductRepository, categoryRepo: CategoryRepository, stockRepo: StockRepository, promoRepo: PromotionRepository)
                                  (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
 
+  val redirect = "/products/all"
+
   val productForm: Form[CreateProductForm] = Form {
     mapping(
       "name" -> nonEmptyText,
       "description" -> nonEmptyText,
-      "category_id" -> number,
+      "categoryId" -> number,
       "price" -> longNumber
     )(CreateProductForm.apply)(CreateProductForm.unapply)
   }
@@ -26,7 +28,7 @@ class ProductController @Inject()(cc: MessagesControllerComponents, productRepo:
       "id" -> number,
       "name" -> nonEmptyText,
       "description" -> nonEmptyText,
-      "category_id" -> number,
+      "categoryId" -> number,
       "price" -> longNumber
     )(UpdateProductForm.apply)(UpdateProductForm.unapply)
   }
@@ -43,7 +45,7 @@ class ProductController @Inject()(cc: MessagesControllerComponents, productRepo:
         )
       },
       product => {
-        productRepo.add(product.name, product.description, product.category_id, product.price).map { _ =>
+        productRepo.add(product.name, product.description, product.categoryId, product.price).map { _ =>
           Redirect(routes.ProductController.create()).flashing("success" -> "Product created")
         }
       }
@@ -65,30 +67,30 @@ class ProductController @Inject()(cc: MessagesControllerComponents, productRepo:
     val prod: Future[Option[Product]] = productRepo.details(id)
     prod.map {
       case Some(p) => Ok(views.html.product.details(p))
-      case None => Redirect("/products/all")
+      case None => Redirect(redirect)
     }
   }
 
   def extendedDetailsHelper(p: Product): Future[ExtendedProduct] = {
     promoRepo.details(p.id).map(promo => {ExtendedProduct(1,"name","desc",1,1,"cat",23,25)})
-    categoryRepo.details(p.category_id).flatMap(cat =>
+    categoryRepo.details(p.categoryId).flatMap(cat =>
       stockRepo.details(p.id).flatMap(stock =>
         promoRepo.promoActiveProduct(p.id).map(promo => {
-          ExtendedProduct(p.id, p.name, p.description, p.category_id, p.price,
-            cat.getOrElse(Category(0,"None")).name, stock.getOrElse(Stock(0,p.id,0)).quantity, promo.getOrElse(Promotion(0,"none",1,p.id,0)).percentage_sale)
+          ExtendedProduct(p.id, p.name, p.description, p.categoryId, p.price,
+            cat.getOrElse(Category(0,"None")).name, stock.getOrElse(Stock(0,p.id,0)).quantity, promo.getOrElse(Promotion(0,"none",1,p.id,0)).percentageSale)
         })))
   }
 
   def delete(id: Int): Action[AnyContent] = Action {
     productRepo.delete(id)
-    Redirect("/products/all")
+    Redirect(redirect)
   }
 
   def update(id: Int): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
     productRepo.details(id).map {
       case Some(p) => Ok(views.html.product.update(updateProductForm.fill(UpdateProductForm(p.id, p.name, p.description,
-        p.category_id, p.price))))
-      case None => Redirect("/products/all")
+        p.categoryId, p.price))))
+      case None => Redirect(redirect)
     }
   }
 
@@ -100,7 +102,7 @@ class ProductController @Inject()(cc: MessagesControllerComponents, productRepo:
         )
       },
       product => {
-        productRepo.update(product.id, Product(product.id, product.name, product.description, product.category_id, product.price)).map { _ =>
+        productRepo.update(product.id, Product(product.id, product.name, product.description, product.categoryId, product.price)).map { _ =>
           Redirect(routes.ProductController.update(product.id: Int)).flashing("success" -> "Product updated")
         }
       }
@@ -140,7 +142,7 @@ class ProductController @Inject()(cc: MessagesControllerComponents, productRepo:
         "message" -> "Bad JSON"
       ))
     }, { product =>
-      productRepo.add(product.name, product.description, product.category_id, product.price)
+      productRepo.add(product.name, product.description, product.categoryId, product.price)
       Ok(Json.obj("status" -> "OK", "message" -> "Product created"))
     })
   }
@@ -163,5 +165,5 @@ class ProductController @Inject()(cc: MessagesControllerComponents, productRepo:
   }
 }
 
-case class CreateProductForm(name: String, description: String, category_id: Int, price: Long)
-case class UpdateProductForm(id: Int, name: String, description: String, category_id: Int, price: Long)
+case class CreateProductForm(name: String, description: String, categoryId: Int, price: Long)
+case class UpdateProductForm(id: Int, name: String, description: String, categoryId: Int, price: Long)

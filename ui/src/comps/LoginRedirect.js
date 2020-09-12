@@ -1,7 +1,5 @@
 import React from 'react';
 import 'materialize-css/dist/css/materialize.min.css';
-import $ from 'jquery';
-import M from "materialize-css";
 import { withCookies, Cookies } from 'react-cookie';
 import { instanceOf } from 'prop-types';
 
@@ -21,12 +19,10 @@ class LoginRedirect extends React.Component {
     }
 
     componentDidMount() {
-        // this.global contex = ${this.props.params.token}
         const { cookies } = this.props;
         let tkn = this.props.match.params.token;
         cookies.set('tkn', tkn, { path: '/' });
         this.setState({ tkn });
-        // window.location.reload()
     }
 
     render() {
@@ -34,7 +30,6 @@ class LoginRedirect extends React.Component {
             window.location = window.location + '#loaded';
             window.location.reload();
         }
-        console.log(this.state.tkn);
 
         return (
             <div>

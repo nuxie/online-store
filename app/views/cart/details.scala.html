@@ -2,12 +2,12 @@
 
 <table aria-describedby="carts">
     <tr>
-        <th id="product_id">Product ID</th>
+        <th id="productId">Product ID</th>
         <th id="quantity">Quantity</th>
     </tr>
     @for(cart <- carts) {
         <tr>
-            <td>@cart.product_id</td>
+            <td>@cart.productId</td>
             <td>@cart.quantity</td>
         </tr>
     }

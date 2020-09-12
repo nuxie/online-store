@@ -6,8 +6,8 @@
 
 @form(routes.OrderProductsController.addHandle()) {
     @helper.CSRF.formField
-    @inputText(order_products("order_id"))
-    @inputText(order_products("product_id"))
+    @inputText(order_products("orderId"))
+    @inputText(order_products("productId"))
     @inputText(order_products("quantity"))
 
     <div class="buttons">

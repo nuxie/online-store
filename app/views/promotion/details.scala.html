@@ -2,18 +2,17 @@
 
 <table aria-describedby="promotions">
     <tr>
-        <td id="id">ID: @promotion.id</td>
+        <th id="id">ID</th>
+        <th id="name">Name</th>
+        <th id="flagActive">Is promo active?</th>
+        <th id="productId">Product ID</th>
+        <th id="percentageSale">Percentage sale</th>
     </tr>
     <tr>
-        <td id="name">Name: @promotion.name</td>
-    </tr>
-    <tr>
-        <td id="flag_active">Is promo active?: @promotion.flag_active</td>
-    </tr>
-    <tr>
-        <td id="product_id">Product ID: @promotion.product_id</td>
-    </tr>
-    <tr>
-        <td id="percentage_sale">Perc. sale: @promotion.percentage_sale</td>
+        <td id="id">@promotion.id</td>
+        <td id="name">@promotion.name</td>
+        <td id="flagActive">@promotion.flagActive</td>
+        <td id="productId">@promotion.productId</td>
+        <td id="percentageSale">@promotion.percentageSale</td>
     </tr>
 </table>

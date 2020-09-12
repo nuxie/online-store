@@ -5,10 +5,8 @@ import slick.lifted.Tag
 
 case class UserLoginInfoDb(userId: String, loginInfoId: String)
 
-class UserLoginInfoTable(tag: Tag) extends Table[UserLoginInfoDb](tag, "UserLoginInfo") {
-  def userId = column[String]("UserId")
-
-  def loginInfoId = column[String]("LoginInfoId")
-
+class UserLoginInfoTable(tag: Tag) extends Table[UserLoginInfoDb](tag, "USERLOGININFO") {
+  def userId = column[String]("USER_ID")
+  def loginInfoId = column[String]("LOGININFO_ID")
   override def * = (userId, loginInfoId) <> ((UserLoginInfoDb.apply _).tupled, UserLoginInfoDb.unapply)
 }

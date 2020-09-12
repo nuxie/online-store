@@ -2,12 +2,13 @@
 
 <table aria-describedby="invoices">
     <tr>
-        <td id="id">ID: @invoice.id</td>
+        <th id="id">ID</th>
+        <th id="orderId">Order ID</th>
+        <th id="paymentDue">Payment due</th>
     </tr>
     <tr>
-        <td id="order_id">Order id: @invoice.order_id</td>
-    </tr>
-    <tr>
-        <td id="payment_due">Payment due: @invoice.payment_due</td>
+        <td id="id">@invoice.id</td>
+        <td id="orderId">@invoice.orderId</td>
+        <td id="paymentDue">@invoice.paymentDue]</td>
     </tr>
 </table>

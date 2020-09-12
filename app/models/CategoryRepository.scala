@@ -3,21 +3,18 @@ package models
 import javax.inject.{Inject, Singleton}
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
-
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CategoryRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
+class CategoryRepository @Inject()(dbConfigProvider: DatabaseConfigProvider) (implicit ec: ExecutionContext) {
   val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
   import profile.api._
 
-  class CategoryTable(tag: Tag) extends Table[Category](tag, "categories") {
-    def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
-
-    def name = column[String]("name")
-
+  class CategoryTable(tag: Tag) extends Table[Category](tag, "CATEGORIES") {
+    def id = column[Int]("ID", O.PrimaryKey, O.AutoInc)
+    def name = column[String]("NAME")
     def * = (id, name) <> ((Category.apply _).tupled, Category.unapply)
   }
 
@@ -34,7 +31,7 @@ class CategoryRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(imp
     category.result
   }
 
-  def details(id: Int): Future[Option[Category]] = db.run { //getById
+  def details(id: Int): Future[Option[Category]] = db.run {
     category.filter(_.id === id).result.headOption
   }
 

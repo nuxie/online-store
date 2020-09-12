@@ -1,7 +1,6 @@
 import React from "react";
 import { withCookies, Cookies } from 'react-cookie';
 import { instanceOf } from 'prop-types';
-import {Link} from "react-router-dom";
 
 class Cart extends React.Component {
     static propTypes = {
@@ -26,7 +25,6 @@ class Cart extends React.Component {
         const params = {
             headers: {
                 'Accept': "application/json, text/plain, */*",
-                'Content-Type': 'application/json; charset=utf-8',
                 "X-Auth-Token": cookies.get('tkn', { path: '/' })
             },
             method: "GET"
@@ -44,16 +42,12 @@ class Cart extends React.Component {
     }
 
     render() {
-        console.log(this.state.tkn);
         if(this.state.cart.length === 0) {
             return (
-                <body>
                     <h2> Nothing to see here... Let's go shopping! </h2>
-                </body>
             );
         } else {
             return (
-                <body>
                 <div className="container col-12 col-lg-4 login-card mt-2 hv-center">
                     <h2>Cart</h2>
                     <table className="centered">
@@ -67,7 +61,7 @@ class Cart extends React.Component {
                         </thead>
                         <tbody>
                         {this.state.cart.map(c =>
-                            <tr key={c.product_id}>
+                            <tr key={c.productId}>
                                 <td>{c.name}</td>
                                 <td>{c.quantity}</td>
                                 <td>{c.promotion}</td>
@@ -86,7 +80,6 @@ class Cart extends React.Component {
                         </button>
                     </a>
                 </div>
-                </body>
             );
         }
     }

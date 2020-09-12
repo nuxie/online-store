@@ -1,40 +1,34 @@
 package controllers
-import akka.http.scaladsl.model.headers._
-import com.mohiva.play.silhouette.api.services.{AuthenticatorService, IdentityService}
-import com.mohiva.play.silhouette.api.{HandlerResult, Silhouette, SilhouetteProvider}
-import com.mohiva.play.silhouette.impl.authenticators.JWTAuthenticator
+import com.mohiva.play.silhouette.api.Silhouette
 import javax.inject._
-import models.{Cart, CartRepository, Category, ExtendedCart, ExtendedProduct, Product, ProductRepository, Promotion, PromotionRepository, Stock, User, UserIdentity}
-import play.api.Environment
+import models.{Cart, CartRepository, ExtendedCart, Product, ProductRepository, Promotion, PromotionRepository}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.i18n.I18nSupport
 import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.{Action, request, _}
-import services.UserServiceImpl
+import play.api.mvc.{Action, AnyContent, MessagesAbstractController, MessagesControllerComponents}
 import silhouette.DefaultEnv
 
 import scala.concurrent.{ExecutionContext, Future}
 
 
 @Singleton
-class CartController @Inject()(val silhouette: Silhouette[DefaultEnv], productRepo: ProductRepository,
-                              productController: ProductController, promoRepo: PromotionRepository,
+class CartController @Inject()(val silhouette: Silhouette[DefaultEnv], productRepo: ProductRepository, promoRepo: PromotionRepository,
                                cc: MessagesControllerComponents, cartRepo: CartRepository)
                               (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) with I18nSupport {
 
   val cartForm: Form[CreateCartForm] = Form {
     mapping(
-      "user_id" -> text,
-      "product_id" -> number,
+      "userId" -> text,
+      "productId" -> number,
       "quantity" -> number
     )(CreateCartForm.apply)(CreateCartForm.unapply)
   }
   val updateCartForm: Form[UpdateCartForm] = Form {
     mapping(
       "id" -> number,
-      "user_id" -> text,
-      "product_id" -> number,
+      "userId" -> text,
+      "productId" -> number,
       "quantity" -> number
     )(UpdateCartForm.apply)(UpdateCartForm.unapply)
   }
@@ -51,7 +45,7 @@ class CartController @Inject()(val silhouette: Silhouette[DefaultEnv], productRe
         )
       },
       cart => {
-        cartRepo.add(cart.user_id, cart.product_id, cart.quantity).map { _ =>
+        cartRepo.add(cart.userId, cart.productId, cart.quantity).map { _ =>
           Redirect(routes.CartController.add()).flashing("success" -> "Cart product(s) added")
         }
       }
@@ -62,10 +56,10 @@ class CartController @Inject()(val silhouette: Silhouette[DefaultEnv], productRe
     cartRepo.list().map(i => Ok(views.html.cart.list(i)))
   }
 
-
   def detailsUserJSON(): Action[AnyContent] = silhouette.UserAwareAction.async { implicit request =>
     request.identity match {
       case Some(user) => {
+        println("Getting cart details for the user:")
         println(user.id)
         cartRepo.detailsUser(user.id).map(i => Ok(Json.toJson(i))) }
       case None => Future.successful(Redirect(routes.HomeController.index()))
@@ -75,6 +69,7 @@ class CartController @Inject()(val silhouette: Silhouette[DefaultEnv], productRe
   def deleteUser(): Action[AnyContent] = silhouette.UserAwareAction.async { implicit request =>
     request.identity match {
       case Some(user) => {
+        println("Removing cart for the user:")
         println(user.id)
         cartRepo.delete(user.id).map(i => Ok(views.html.index())) }
       case None => Future.successful(Redirect(routes.HomeController.index()))
@@ -91,6 +86,7 @@ class CartController @Inject()(val silhouette: Silhouette[DefaultEnv], productRe
   def addJSON(): Action[JsValue] = silhouette.UserAwareAction(parse.json) { implicit request =>
     request.identity match {
       case Some(user) => {
+        println("Adding to cart for the user...")
         println(user.id)
         request.body.validate[Cart].fold({ errors =>
           BadRequest(Json.obj(
@@ -98,7 +94,7 @@ class CartController @Inject()(val silhouette: Silhouette[DefaultEnv], productRe
             "message" -> "Bad JSON"
           ))
         }, { cart =>
-          cartRepo.add(user.id, cart.product_id, cart.quantity)
+          cartRepo.add(user.id, cart.productId, cart.quantity)
           Ok(Json.obj("status" -> "OK", "message" -> "Cart created"))
         })
       }
@@ -145,12 +141,12 @@ class CartController @Inject()(val silhouette: Silhouette[DefaultEnv], productRe
   }
 
   def extendedDetailsHelper(c: Cart): Future[ExtendedCart] = {
-    productRepo.details(c.product_id).flatMap(p =>
-        promoRepo.promoActiveProduct(c.product_id).map(promo => {
-          ExtendedCart(c.id, c.user_id, c.product_id, c.quantity,
+    productRepo.details(c.productId).flatMap(p =>
+        promoRepo.promoActiveProduct(c.productId).map(promo => {
+          ExtendedCart(c.id, c.userId, c.productId, c.quantity,
             p.getOrElse(Product(0,"None","None",0,0)).name, p.getOrElse(Product(0,"None","None",0,0)).price,
-            promo.getOrElse(Promotion(0,"none",1,c.product_id,0)).percentage_sale)}))}
+            promo.getOrElse(Promotion(0,"none",1,c.productId,0)).percentageSale)}))}
 }
 
-case class CreateCartForm(user_id: String, product_id: Int, quantity: Int)
-case class UpdateCartForm(id: Int, user_id: String, product_id: Int, quantity: Int)
+case class CreateCartForm(userId: String, productId: Int, quantity: Int)
+case class UpdateCartForm(id: Int, userId: String, productId: Int, quantity: Int)

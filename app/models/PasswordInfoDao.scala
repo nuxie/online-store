@@ -4,31 +4,29 @@ import com.mohiva.play.silhouette.api.LoginInfo
 import com.mohiva.play.silhouette.api.util.PasswordInfo
 import com.mohiva.play.silhouette.persistence.daos.DelegableAuthInfoDAO
 import javax.inject.Inject
-import models.{PasswordInfoDb, AuthenticationsTables}
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
-
 import scala.concurrent.{ExecutionContext, Future}
 import scala.reflect.ClassTag
 
 class PasswordInfoDao @Inject()(protected val dbConfigProvider: DatabaseConfigProvider)
                                (implicit ec: ExecutionContext, val classTag: ClassTag[PasswordInfo])
-  extends DelegableAuthInfoDAO[PasswordInfo] with AuthenticationsTables {
+  extends DelegableAuthInfoDAO[PasswordInfo] with AuthTables {
 
   val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
   import profile.api._
 
-  def findLoginInfoQuery(loginInfo: LoginInfo) =
+  def findLoginInfoQuery(loginInfo: LoginInfo): Query[LoginInfoTable, LoginInfoDb, Seq] =
     loginInfoTable.filter(dbLoginInfo => dbLoginInfo.providerId === loginInfo.providerID &&
       dbLoginInfo.providerKey === loginInfo.providerKey)
 
-  def findPasswordQuery(loginInfo: LoginInfo) = {
+  def findPasswordQuery(loginInfo: LoginInfo): Query[PasswordInfoTable, PasswordInfoDb, Seq] = {
     passwordInfoTable.filter(_.loginInfoId in findLoginInfoQuery(loginInfo).map(_.id))
   }
 
-  def addAction(loginInfo: LoginInfo, authInfo: PasswordInfo) =
+  def addAction(loginInfo: LoginInfo, authInfo: PasswordInfo): DBIOAction[Int, NoStream, Effect.Read with Effect.Write with Effect.Transactional] =
     findLoginInfoQuery(loginInfo).result.head.flatMap { dbLoginInfo =>
       passwordInfoTable += PasswordInfoDb(authInfo.hasher, authInfo.password, authInfo.salt, dbLoginInfo.id)
     }.transactionally
@@ -38,7 +36,6 @@ class PasswordInfoDao @Inject()(protected val dbConfigProvider: DatabaseConfigPr
       .map(dbPasswordInfo => (dbPasswordInfo.hasher, dbPasswordInfo.password, dbPasswordInfo.salt))
       .update((passwordInfo.hasher, passwordInfo.password, passwordInfo.salt))
   }
-
 
   override def find(loginInfo: LoginInfo): Future[Option[PasswordInfo]] = db.run {
     findPasswordQuery(loginInfo).result.headOption.map(dbPwdOption => dbPwdOption.map(dbPwd =>

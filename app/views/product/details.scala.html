@@ -2,18 +2,17 @@
 
 <table aria-describedby="products">
     <tr>
-        <td id="id">ID: @product.id</td>
+        <th id="id">ID</th>
+        <th id="name">Name</th>
+        <th id="description">Description</th>
+        <th id="categoryId">Category ID</th>
+        <th id="price">Price</th>
     </tr>
     <tr>
-        <td id="name">Name: @product.name</td>
-    </tr>
-    <tr>
-        <td id="description">Description: @product.description</td>
-    </tr>
-    <tr>
-        <td id="category_id">Category ID: @product.category_id</td>
-    </tr>
-    <tr>
-        <td id="price">Price: @product.price</td>
+        <td id="id">@product.id</td>
+        <td id="name">@product.name</td>
+        <td id="description">@product.description</td>
+        <td id="categoryId">@product.categoryId</td>
+        <td id="price">@product.price</td>
     </tr>
 </table>

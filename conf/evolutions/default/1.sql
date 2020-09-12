@@ -1,6 +1,6 @@
 -- !Ups
 
-CREATE TABLE users (
+CREATE TABLE USERS (
     USER_ID      INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     FIRST_NAME   TEXT,
     LAST_NAME    TEXT,
@@ -9,177 +9,156 @@ CREATE TABLE users (
     PROVIDER_KEY TEXT NOT NULL
 );
 
-CREATE TABLE passwords (
+CREATE TABLE PASSWORDS (
    PROVIDER_KEY VARCHAR(254) NOT NULL PRIMARY KEY,
    HASHER   TEXT         NOT NULL,
    HASH     TEXT         NOT NULL,
    SALT     TEXT
 );
 
-CREATE TABLE categories
+CREATE TABLE CATEGORIES
 (
-    id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    name VARCHAR NOT NULL,
-    UNIQUE (name)
+    ID   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    NAME VARCHAR NOT NULL,
+    UNIQUE (NAME)
 );
 
-CREATE TABLE products
+CREATE TABLE PRODUCTS
 (
-    id          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    name        VARCHAR NOT NULL,
-    description VARCHAR NOT NULL,
-    category_id    INT     NOT NULL,
-    price       REAL    NOT NULL,
-    FOREIGN KEY (category_id) references categories (id)
+    ID          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    NAME        VARCHAR NOT NULL,
+    DESCRIPTION VARCHAR NOT NULL,
+    CATEGORY_ID    INT     NOT NULL,
+    PRICE       REAL    NOT NULL,
+    FOREIGN KEY (CATEGORY_ID) REFERENCES CATEGORIES (ID)
 );
 
-CREATE TABLE carts
+CREATE TABLE CARTS
 (
-    id         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    user_id    TEXT NOT NULL,
-    product_id INT     NOT NULL,
-    quantity   INT     NOT NULL,
-    FOREIGN KEY (product_id) references products (id)
+    ID         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    USER_ID    TEXT NOT NULL,
+    PRODUCT_ID INT     NOT NULL,
+    QUANTITY   INT     NOT NULL,
+    FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCTS (ID)
 );
 
-CREATE TABLE orders_products
+CREATE TABLE ORDERS_PRODUCTS
 (
-    id         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    order_id    INT     NOT NULL,
-    product_id INT     NOT NULL,
-    quantity   INT     NOT NULL,
-    FOREIGN KEY (product_id) references products (id),
-    FOREIGN KEY (order_id) references orders (id)
+    ID         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    ORDER_ID    INT     NOT NULL,
+    PRODUCT_ID INT     NOT NULL,
+    QUANTITY   INT     NOT NULL,
+    FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCTS (ID),
+    FOREIGN KEY (ORDER_ID) REFERENCES ORDERS (ID)
 );
 
-CREATE TABLE orders
+CREATE TABLE ORDERS
 (
-    id         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    user_id    TEXT NOT NULL,
-    FOREIGN KEY (user_id) references AppUser (Id)
+    ID         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    USER_ID    TEXT NOT NULL,
+    FOREIGN KEY (USER_ID) REFERENCES APPUSER (ID)
 );
 
-CREATE TABLE invoices
+CREATE TABLE INVOICES
 (
-    id          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    order_id    INT NOT NULL,
-    payment_due VARCHAR NOT NULL,
-    FOREIGN KEY (order_id) references orders (id)
+    ID          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    ORDER_ID    INT NOT NULL,
+    PAYMENT_DUE VARCHAR NOT NULL,
+    FOREIGN KEY (ORDER_ID) REFERENCES ORDERS (ID)
 );
 
-CREATE TABLE promotions
+CREATE TABLE PROMOTIONS
 (
-    id              INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    name            VARCHAR NOT NULL,
-    flag_active     INT     NOT NULL,
-    product_id      INT     NOT NULL,
-    percentage_sale INT     NOT NULL,
-    FOREIGN KEY (product_id) references products (id)
+    ID              INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    NAME            VARCHAR NOT NULL,
+    FLAG_ACTIVE     INT     NOT NULL,
+    PRODUCT_ID      INT     NOT NULL,
+    PERCENTAGE_SALE INT     NOT NULL,
+    FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCTS (ID)
 );
 
-CREATE TABLE reviews
+CREATE TABLE REVIEWS
 (
-    id          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    product_id  INT     NOT NULL,
-    description VARCHAR NOT NULL,
-    FOREIGN KEY (product_id) references products (id)
+    ID          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    PRODUCT_ID  INT     NOT NULL,
+    DESCRIPTION VARCHAR NOT NULL,
+    FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCTS (ID)
 );
 
 CREATE TABLE stock
 (
-    id         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    product_id INT     NOT NULL,
-    quantity   INT     NOT NULL,
-    FOREIGN KEY (product_id) references products (id),
-    UNIQUE (product_id)
+    ID         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    PRODUCT_ID INT     NOT NULL,
+    QUANTITY   INT     NOT NULL,
+    FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCTS (ID),
+    UNIQUE (PRODUCT_ID)
 );
 
-CREATE TABLE wishlists
+CREATE TABLE WISHLISTS
 (
-    id         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    user_id    INT     NOT NULL,
-    product_id INT     NOT NULL,
-    FOREIGN KEY (user_id) references AppUser (Id),
-    FOREIGN KEY (product_id) references products (id)
+    ID         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    USER_ID    INT     NOT NULL,
+    PRODUCT_ID INT     NOT NULL,
+    FOREIGN KEY (USER_ID) REFERENCES APPUSER (ID),
+    FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCTS (ID)
 );
 
-CREATE TABLE "AppUser" (
-                           "Id"	TEXT NOT NULL UNIQUE,
-                           "Email"	TEXT NOT NULL,
-                           "FirstName"	TEXT,
-                           "LastName"	TEXT,
-                           "Role"	TEXT NOT NULL,
-                           PRIMARY KEY("Id")
+CREATE TABLE APPUSER (
+    ID	        TEXT NOT NULL UNIQUE PRIMARY KEY,
+    EMAIL	    TEXT NOT NULL,
+    FIRST_NAME	TEXT,
+    LAST_NAME	TEXT,
+    ROLE	    TEXT NOT NULL
 );
 
-CREATE TABLE "LoginInfo" (
-                             "Id"	TEXT NOT NULL UNIQUE,
-                             "ProviderId"	TEXT NOT NULL,
-                             "ProviderKey"	TEXT NOT NULL
+CREATE TABLE LOGININFO (
+    ID	            TEXT NOT NULL UNIQUE,
+    PROVIDER_ID	    TEXT NOT NULL,
+    PROVIDER_KEY	TEXT NOT NULL
 );
 
-CREATE TABLE "UserLoginInfo" (
-                                 "UserId"	TEXT NOT NULL,
-                                 "LoginInfoId"	TEXT NOT NULL,
-                                 FOREIGN KEY("UserId") REFERENCES "AppUser"("Id"),
-                                 FOREIGN KEY("LoginInfoId") REFERENCES "LoginInfo"("Id")
+CREATE TABLE USERLOGININFO (
+     USER_ID	    TEXT NOT NULL,
+     LOGININFO_ID	TEXT NOT NULL,
+     FOREIGN KEY(USER_ID) REFERENCES APPUSER(ID),
+     FOREIGN KEY(LOGININFO_ID) REFERENCES LOGININFO(ID)
 );
 
 
-CREATE TABLE "PasswordInfo" (
-                                "Hasher"	TEXT NOT NULL,
-                                "Password"	TEXT NOT NULL,
-                                "Salt"	TEXT,
-                                "LoginInfoId"	TEXT NOT NULL,
-                                FOREIGN KEY("LoginInfoId") REFERENCES "LoginInfo"("Id")
+CREATE TABLE PASSWORDINFO (
+    HASHER	        TEXT NOT NULL,
+    PASSWORD	    TEXT NOT NULL,
+    SALT	        TEXT,
+    LOGININFO_ID	TEXT NOT NULL,
+    FOREIGN KEY(LOGININFO_ID) REFERENCES LOGININFO(ID)
 );
 
-CREATE TABLE "OAuth2Info" (
-                              "Id"	TEXT NOT NULL UNIQUE,
-                              "AccessToken"	TEXT NOT NULL,
-                              "TokenType"	TEXT,
-                              "ExpiresIn"	INTEGER,
-                              "RefreshToken"	TEXT,
-                              "LoginInfoId"	TEXT NOT NULL,
-                              PRIMARY KEY("Id"),
-                              FOREIGN KEY("LoginInfoId") REFERENCES "LoginInfo"("Id")
-);
-
-CREATE TABLE "opinion" (
-                           "id"   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-                           "review" VARCHAR NOT NULL,
-                           "stars" INTEGER NOT NULL CHECK ("stars">=1 AND "stars" <=5),
-                           "userName" VARCHAR NOT NULL ,
-                           "product" INTEGER NOT NULL,
-                           FOREIGN KEY (product) references products (id)
-);
-
-CREATE TABLE "favourites" (
-                              "user" VARCHAR NOT NULL,
-                              "product" INTEGER NOT NULL,
-                              FOREIGN KEY (user) references AppUser (id),
-                              FOREIGN KEY (product) references products (id)
-
+CREATE TABLE OAUTH2INFO (
+    ID	            TEXT NOT NULL UNIQUE PRIMARY KEY,
+    ACCESS_TOKEN	TEXT NOT NULL,
+    TOKEN_TYPE	    TEXT,
+    EXPIRES_IN	    INTEGER,
+    REFRESH_TOKEN	TEXT,
+    LOGININFO_ID	TEXT NOT NULL,
+    FOREIGN KEY(LOGININFO_ID) REFERENCES LOGININFO(ID)
 );
 
 -- !Downs
 
-DROP TABLE carts;
-DROP TABLE categories;
-DROP TABLE users;
-DROP TABLE invoices;
-DROP TABLE orders;
-DROP TABLE orders_products;
-DROP TABLE products;
-DROP TABLE promotions;
-DROP TABLE reviews;
-DROP TABLE stock;
-DROP TABLE wishlists;
-DROP TABLE passwords;
-DROP TABLE OAuth2Info;
-DROP TABLE PasswordInfo;
-DROP TABLE LoginInfo;
-DROP TABLE UserLoginInfo;
-DROP TABLE AppUser;
-DROP TABLE opinion;
-DROP TABLE favourites;
+DROP TABLE CARTS;
+DROP TABLE CATEGORIES;
+DROP TABLE USERS;
+DROP TABLE INVOICES;
+DROP TABLE ORDERS;
+DROP TABLE ORDERS_PRODUCTS;
+DROP TABLE PRODUCTS;
+DROP TABLE PROMOTIONS;
+DROP TABLE REVIEWS;
+DROP TABLE STOCK;
+DROP TABLE WISHLISTS;
+DROP TABLE PASSWORDS;
+DROP TABLE OAUTH2INFO;
+DROP TABLE PASSWORDINFO;
+DROP TABLE LOGININFO;
+DROP TABLE USERLOGININFO;
+DROP TABLE APPUSER;

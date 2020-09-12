@@ -8,8 +8,8 @@
 
     @helper.CSRF.formField
     <input name="id" id="id" value="@wishlist("id").value" type="hidden" />
-    @inputText(wishlist("user_id"))
-    @inputText(wishlist("product_id"))
+    @inputText(wishlist("userId"))
+    @inputText(wishlist("productId"))
 
     <div class="buttons">
         <input type="submit" value="Update wishlist"/>

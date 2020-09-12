@@ -8,8 +8,8 @@
 
     @helper.CSRF.formField
     <input name="id" id="id" value="@invoice("id").value" type="hidden" />
-    @inputText(invoice("order_id"))
-    @inputText(invoice("payment_due"))
+    @inputText(invoice("orderId"))
+    @inputText(invoice("paymentDue"))
 
     <div class="buttons">
         <input type="submit" value="Update invoice"/>
