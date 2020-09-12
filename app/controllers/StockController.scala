@@ -11,7 +11,7 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class StockController @Inject()(cc: MessagesControllerComponents, stockRepo: StockRepository)
-                                (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
+                               (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
 
   val stockForm: Form[CreateStockForm] = Form {
     mapping(

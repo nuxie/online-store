@@ -1,16 +1,14 @@
-@(cart: Cart)
+@(carts: Seq[Cart])
 
 <table aria-describedby="carts">
     <tr>
-        <td id="id">ID: @cart.id</td>
+        <th id="product_id">Product ID</th>
+        <th id="quantity">Quantity</th>
     </tr>
-    <tr>
-        <td id="user_id">User ID: @cart.user_id</td>
-    </tr>
-    <tr>
-        <td id="product_id">Product ID: @cart.product_id</td>
-    </tr>
-    <tr>
-        <td id="quantity">Quantity: @cart.quantity</td>
-    </tr>
+    @for(cart <- carts) {
+        <tr>
+            <td>@cart.product_id</td>
+            <td>@cart.quantity</td>
+        </tr>
+    }
 </table>

@@ -3,6 +3,7 @@ package models
 import javax.inject.{Inject, Singleton}
 import play.api.db.slick.DatabaseConfigProvider
 import slick.jdbc.JdbcProfile
+import models.{Category, CategoryRepository, ExtendedProduct, Product, ProductRepository, Promotion, PromotionRepository, Stock, StockRepository}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -15,7 +16,7 @@ class CartRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implici
 
   class CartTable(tag: Tag) extends Table[Cart](tag, "carts") {
     def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
-    def user_id = column[Int]("user_id")
+    def user_id = column[String]("user_id")
     def product_id = column[Int]("product_id")
     def quantity = column[Int]("quantity")
 
@@ -24,7 +25,7 @@ class CartRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implici
 
   private val cart = TableQuery[CartTable]
 
-  def add(user_id: Int, product_id: Int, quantity: Int): Future[Cart] = db.run {
+  def add(user_id: String, product_id: Int, quantity: Int): Future[Cart] = db.run {
     (cart.map(c => (c.user_id, c.product_id, c.quantity))
       returning cart.map(_.id)
       into { case ((user_id, product_id, quantity), id) => Cart(id, user_id, product_id, quantity) }
@@ -35,12 +36,12 @@ class CartRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implici
     cart.result
   }
 
-  def details(id: Int): Future[Option[Cart]] = db.run { //getById
-    cart.filter(_.id === id).result.headOption
+  def detailsUser(uid: String): Future[Seq[Cart]] = db.run {
+    cart.filter(_.user_id === uid).result
   }
 
-  def delete(id: Int): Future[Unit] = db.run {
-    cart.filter(_.id === id)
+  def delete(uid: String): Future[Unit] = db.run {
+    cart.filter(_.user_id === uid)
       .delete
       .map(_ => ())
   }

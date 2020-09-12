@@ -1,7 +1,7 @@
 package controllers
 
 import javax.inject._
-import models.{Product, ProductRepository}
+import models.{Product, ExtendedProduct, Promotion, Stock, Category, CategoryRepository, ProductRepository, StockRepository, PromotionRepository}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.json.{JsValue, Json}
@@ -10,7 +10,7 @@ import play.api.mvc._
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ProductController @Inject()(cc: MessagesControllerComponents, productRepo: ProductRepository)
+class ProductController @Inject()(cc: MessagesControllerComponents, productRepo: ProductRepository, categoryRepo: CategoryRepository, stockRepo: StockRepository, promoRepo: PromotionRepository)
                                  (implicit ec: ExecutionContext) extends MessagesAbstractController(cc) {
 
   val productForm: Form[CreateProductForm] = Form {
@@ -54,12 +54,29 @@ class ProductController @Inject()(cc: MessagesControllerComponents, productRepo:
     productRepo.list().map(i => Ok(views.html.product.list(i)))
   }
 
+  def extendedList: Action[AnyContent] = Action.async { implicit request =>
+    productRepo.list()
+      .map(p =>
+        p.map(p => extendedDetailsHelper(p))
+      ).flatMap(extendedProducts => Future.sequence(extendedProducts).map(i => Ok(views.html.product.extendedList(i))))
+  }
+
   def details(id: Int): Action[AnyContent] = Action.async { implicit request =>
     val prod: Future[Option[Product]] = productRepo.details(id)
     prod.map {
       case Some(p) => Ok(views.html.product.details(p))
       case None => Redirect("/products/all")
     }
+  }
+
+  def extendedDetailsHelper(p: Product): Future[ExtendedProduct] = {
+    promoRepo.details(p.id).map(promo => {ExtendedProduct(1,"name","desc",1,1,"cat",23,25)})
+    categoryRepo.details(p.category_id).flatMap(cat =>
+      stockRepo.details(p.id).flatMap(stock =>
+        promoRepo.promoActiveProduct(p.id).map(promo => {
+          ExtendedProduct(p.id, p.name, p.description, p.category_id, p.price,
+            cat.getOrElse(Category(0,"None")).name, stock.getOrElse(Stock(0,p.id,0)).quantity, promo.getOrElse(Promotion(0,"none",1,p.id,0)).percentage_sale)
+        })))
   }
 
   def delete(id: Int): Action[AnyContent] = Action {
@@ -70,7 +87,7 @@ class ProductController @Inject()(cc: MessagesControllerComponents, productRepo:
   def update(id: Int): Action[AnyContent] = Action.async { implicit request: MessagesRequest[AnyContent] =>
     productRepo.details(id).map {
       case Some(p) => Ok(views.html.product.update(updateProductForm.fill(UpdateProductForm(p.id, p.name, p.description,
-                                                      p.category_id, p.price))))
+        p.category_id, p.price))))
       case None => Redirect("/products/all")
     }
   }
@@ -90,12 +107,6 @@ class ProductController @Inject()(cc: MessagesControllerComponents, productRepo:
     )
   }
 
-  def listJSON: Action[AnyContent] = Action.async { implicit request =>
-    productRepo.list().map(p =>
-      Ok(Json.toJson(p))
-    )
-  }
-
   def detailsJSON(id: Int): Action[AnyContent] = Action.async { implicit request =>
     productRepo.details(id).map {
       case Some(p) => Ok(Json.toJson(p))
@@ -104,6 +115,22 @@ class ProductController @Inject()(cc: MessagesControllerComponents, productRepo:
         "message" -> "Not found"
       ))
     }
+  }
+
+  def listJSON: Action[AnyContent] = Action.async { implicit request =>
+    productRepo.list().map(p =>
+      Ok(Json.toJson(p))
+    )
+  }
+
+
+  def extendedListJSON: Action[AnyContent] = Action.async { implicit request =>
+    productRepo.list()
+      .map(p =>
+        p.map(p => extendedDetailsHelper(p))
+      ).flatMap(extendedProducts => Future.sequence(extendedProducts))
+      .map(extendedProducts => Json.toJson(extendedProducts))
+      .map(json => Ok(json))
   }
 
   def addJSON(): Action[JsValue] = Action(parse.json) { request =>

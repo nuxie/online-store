@@ -34,8 +34,8 @@ class StockRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(implic
     stock.result
   }
 
-  def details(id: Int): Future[Option[Stock]] = db.run { //getById
-    stock.filter(_.id === id).result.headOption
+  def details(id: Int): Future[Option[Stock]] = db.run { //getById - in this case productID
+    stock.filter(_.product_id === id).result.headOption
   }
 
   def delete(id: Int): Future[Unit] = db.run {

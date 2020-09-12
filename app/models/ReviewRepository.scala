@@ -34,6 +34,11 @@ class ReviewRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(impli
     review.result
   }
 
+  def listProduct(product_id: Int): Future[Seq[Review]] = db.run {
+    review.filter(_.product_id === product_id).result
+  }
+
+
   def details(id: Int): Future[Option[Review]] = db.run { //getById
     review.filter(_.id === id).result.headOption
   }

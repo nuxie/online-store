@@ -2,24 +2,21 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# An example controller showing a sample home page
-GET         /                                  controllers.HomeController.index
+GET         /                                   controllers.HomeController.index
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                      controllers.Assets.versioned(path="/public", file: Asset)
 
-GET         /api/cart                          controllers.CartController.listJSON()
-GET         /api/cart/:id                      controllers.CartController.detailsJSON(id: Int)
+#GET         /api/cart                          controllers.CartController.listJSON()
+GET         /api/cart/details                  controllers.CartController.detailsUserJSON()
+DELETE      /api/cart/delete                    controllers.CartController.deleteUser()
+GET         /api/cart/details_extended         controllers.CartController.detailsUserExtendedJSON()
 POST        /api/cart                          controllers.CartController.addJSON()
 PUT         /api/cart/:id                      controllers.CartController.updateJSON(id: Int)
-DELETE      /api/cart/:id                      controllers.CartController.deleteJSON(id: Int)
+DELETE      /api/cart/:uid                     controllers.CartController.deleteJSON(uid: String)
 GET         /cart/add                          controllers.CartController.add
 POST        /cart/addHandle                    controllers.CartController.addHandle
 GET         /cart/all                          controllers.CartController.list
-GET         /cart/details/:id                  controllers.CartController.details(id: Int)
-GET         /cart/update/:id                   controllers.CartController.update(id: Int)
-POST        /cart/update                       controllers.CartController.updateHandle
-GET         /cart/delete/:id                   controllers.CartController.delete(id: Int)
 
 GET         /api/categories                    controllers.CategoryController.listJSON()
 GET         /api/categories/:id                controllers.CategoryController.detailsJSON(id: Int)
@@ -33,19 +30,6 @@ GET         /categories/details/:id            controllers.CategoryController.de
 GET         /categories/update/:id             controllers.CategoryController.update(id: Int)
 POST        /categories/update                 controllers.CategoryController.updateHandle
 GET         /categories/delete/:id             controllers.CategoryController.delete(id: Int)
-
-GET         /api/users                         controllers.UserController.listJSON()
-GET         /api/users/:id                     controllers.UserController.detailsJSON(id: Int)
-POST        /api/users                         controllers.UserController.createJSON()
-PUT         /api/users/:id                     controllers.UserController.updateJSON(id: Int)
-DELETE      /api/users/:id                     controllers.UserController.deleteJSON(id: Int)
-GET         /users/create                      controllers.UserController.create
-POST        /users/createhandle                controllers.UserController.createHandle
-GET         /users/all                         controllers.UserController.list
-GET         /users/details/:id                 controllers.UserController.details(id: Int)
-GET         /users/update/:id                  controllers.UserController.update(id: Int)
-POST        /users/update                      controllers.UserController.updateHandle
-GET         /users/delete/:id                  controllers.UserController.delete(id: Int)
 
 GET         /api/invoices                      controllers.InvoiceController.listJSON()
 GET         /api/invoices/:id                  controllers.InvoiceController.detailsJSON(id: Int)
@@ -87,6 +71,7 @@ POST        /order_products/update             controllers.OrderProductsControll
 GET         /order_products/delete/:id         controllers.OrderProductsController.delete(id: Int)
 
 GET         /api/products                      controllers.ProductController.listJSON()
+GET         /api/products/extended             controllers.ProductController.extendedListJSON()
 GET         /api/products/:id                  controllers.ProductController.detailsJSON(id: Int)
 POST        /api/products                      controllers.ProductController.addJSON()
 PUT         /api/products/:id                  controllers.ProductController.updateJSON(id: Int)
@@ -94,6 +79,7 @@ DELETE      /api/products/:id                  controllers.ProductController.del
 GET         /products/create                   controllers.ProductController.create
 POST        /products/createhandle             controllers.ProductController.createHandle
 GET         /products/all                      controllers.ProductController.list
+GET         /products/all_extended             controllers.ProductController.extendedList
 GET         /products/details/:id              controllers.ProductController.details(id: Int)
 GET         /products/update/:id               controllers.ProductController.update(id: Int)
 POST        /products/update                   controllers.ProductController.updateHandle
@@ -113,6 +99,7 @@ POST        /promotions/update                 controllers.PromotionController.u
 GET         /promotions/delete/:id             controllers.ProductController.delete(id: Int)
 
 GET         /api/reviews                       controllers.ReviewController.listJSON()
+GET         /api/product_reviews/:id           controllers.ReviewController.listProductJSON(id: Int)
 GET         /api/reviews/:id                   controllers.ReviewController.detailsJSON(id: Int)
 POST        /api/reviews                       controllers.ReviewController.createJSON()
 PUT         /api/reviews/:id                   controllers.ReviewController.updateJSON(id: Int)
@@ -150,3 +137,8 @@ GET         /wishlists/details/:id              controllers.WishlistController.d
 GET         /wishlists/update/:id               controllers.WishlistController.update(id: Int)
 POST        /wishlists/update                   controllers.WishlistController.updateHandle
 GET         /wishlists/delete/:id               controllers.WishlistController.delete(id: Int)
+
+POST        /auth/register                      controllers.RegisterController.submit
+POST        /auth/login                         controllers.LoginController.submit
+POST        /auth/logout                        controllers.LoginController.signOut
+GET         /auth/provider/:provider            controllers.SocialProviderController.authenticate(provider: String)

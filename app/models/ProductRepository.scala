@@ -22,7 +22,7 @@ class ProductRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(impl
 
     def * = (id, name, description, category_id, price) <> ((Product.apply _).tupled, Product.unapply)
   }
-  private val product = TableQuery[ProductTable]
+  val product = TableQuery[ProductTable]
 
   def add(name: String, description: String, category_id: Int, price: Long): Future[Product] = db.run {
     (product.map(p => (p.name, p.description, p.category_id, p.price))

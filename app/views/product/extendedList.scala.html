@@ -1,0 +1,26 @@
+@(products: Seq[ExtendedProduct])
+
+<table aria-describedby="products">
+    <tr>
+        <th id="id">ID</th>
+        <th id="name">Name</th>
+        <th id="description">Description</th>
+        <th id="category_id">Category</th>
+        <th id="price">Price</th>
+        <th id="category_name">Category name</th>
+        <th id="stock_quantity">Units in stock</th>
+        <th id="percentage_sales">Promotion</th>
+    </tr>
+    @for(product <- products) {
+        <tr>
+            <td>@product.id</td>
+            <td>@product.name</td>
+            <td>@product.description</td>
+            <td>@product.category_id</td>
+            <td>@product.price</td>
+            <td>@product.category</td>
+            <td>@product.stock</td>
+            <td>@product.promotion</td>
+        </tr>
+    }
+</table>

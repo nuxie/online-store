@@ -91,6 +91,12 @@ class ReviewController @Inject()(cc: MessagesControllerComponents, reviewRepo: R
     )
   }
 
+  def listProductJSON(product_id: Int): Action[AnyContent] = Action.async { implicit request =>
+    reviewRepo.listProduct(product_id).map(p =>
+      Ok(Json.toJson(p))
+    )
+  }
+
   def detailsJSON(id: Int): Action[AnyContent] = Action.async { implicit request =>
     reviewRepo.details(id).map {
       case Some(p) => Ok(Json.toJson(p))

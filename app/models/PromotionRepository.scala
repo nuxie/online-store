@@ -39,6 +39,10 @@ class PromotionRepository @Inject()(dbConfigProvider: DatabaseConfigProvider)(im
     promotion.filter(_.id === id).result.headOption
   }
 
+  def promoActiveProduct(product_id: Int): Future[Option[Promotion]] = db.run { //getById, in this case product id, promo must be active, getting the first result
+    promotion.filter(_.product_id === product_id).filter(_.flag_active === 1).result.headOption
+  }
+
   def delete(id: Int): Future[Unit] = db.run {
     promotion.filter(_.id === id)
       .delete
