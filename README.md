@@ -1,5 +1,5 @@
 # online-store
-online store in Scala (Play+Slick) / ebusiness classes at Jagiellonian
+online store in Scala (Play+Slick)
 
 authentication implemented in Silhouette - auth library for Play Framework apps: https://www.silhouette.rocks/
 
